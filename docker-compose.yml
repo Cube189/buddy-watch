@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    environment:
+      DB_HOST: postgres
+    ports:
+      - "8080:8080"
+    networks:
+      backend:
+        aliases:
+          - backend
+
+  postgres:
+    image: postgres:12.3
+    restart: on-failure
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      backend:
+        aliases:
+          - db
+
+networks:
+  backend:
