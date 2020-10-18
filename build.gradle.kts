@@ -19,6 +19,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:${Version.flyway}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Version.kotlin}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Version.kotlin}")
+    implementation("org.jooq:jooq-codegen:${Version.jooq}")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${Version.spring.boot}")
     implementation("org.springframework.boot:spring-boot-starter-jooq:${Version.spring.boot}")
 //    implementation("org.springframework.boot:spring-boot-starter-security:${Version.spring.boot}")
