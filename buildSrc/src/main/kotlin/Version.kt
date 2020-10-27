@@ -9,6 +9,7 @@ object Version {
     const val ktlint = "9.3.0"
     const val micrometer = "1.5.5"
     const val mockk = "1.10.0"
+    const val okhttp = "4.9.0"
     const val postgres = "42.2.16"
 
     object logger {
