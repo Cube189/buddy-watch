@@ -1,7 +1,7 @@
 object Version {
     const val docker = "0.13.3"
     const val flyway = "6.5.6"
-    const val jackson = "2.9.0"
+    const val gson = "2.8.6"
     const val java = "11"
     const val jooq = "3.13.5"
     const val kotest = "4.2.4"
