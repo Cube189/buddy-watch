@@ -1,7 +1,7 @@
 package me.gmur.buddywatch.justwatch.api
 
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.collections.shouldContain
 
 class RegionTest : ShouldSpec({
 
@@ -9,9 +9,8 @@ class RegionTest : ShouldSpec({
         val expectedRegion = Region("en_US", "US", "United States")
 
         val result = Regions.available()
-        val actualRegion = result[0]
 
-        actualRegion shouldBe expectedRegion
+        result shouldContain expectedRegion
     }
 
 })
