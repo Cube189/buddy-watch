@@ -10,7 +10,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 class Http constructor(
     private val url: String = BASE_URL,
-    private val body: String? = null
+    private val body: Map<String, Any>? = null
 ) {
 
     companion object {
@@ -23,7 +23,7 @@ class Http constructor(
         return Http(url + path, body)
     }
 
-    fun body(body: String): Http {
+    fun body(body: Map<String, Any>): Http {
         return Http(url, body)
     }
 
@@ -60,9 +60,11 @@ class Http constructor(
             .header("User-Agent", "BuddyWatch")
             .url(url)
 
-        return if (body != null)
-            request.post(body.toRequestBody("application/json".toMediaType())).build()
-        else
+        return if (body != null) {
+            val requestBody = json.toJson(body, object : TypeToken<Map<String, Any>>() {}.type)
+            request.post(requestBody.toRequestBody("application/json".toMediaType())).build()
+        } else {
             request.build()
+        }
     }
 }

@@ -8,7 +8,7 @@ class Titles(private val context: Context) {
 
     fun all(): Pair<Int, Set<Title>> {
         val request = Http().path("titles/${context[REGION]}/popular")
-            .body("{\"providers\":[\"${context[PROVIDER]}\"]}")
+            .body(mapOf("providers" to arrayOf(context[PROVIDER])))
         val type = object : TypeToken<Set<Title>>() {}
 
         return request.executeWithResultCount(type)
