@@ -32,7 +32,7 @@ class Http constructor(private val url: String = BASE_URL) {
 
         val response = client.newCall(request).execute()
 
-        if (!response.isSuccessful) throw RequestUnsuccessful()
+        if (!response.isSuccessful) throw RequestUnsuccessful(request.url.toString(), response.code)
 
         return response.body!!.string()
     }
