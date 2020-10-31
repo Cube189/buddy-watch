@@ -14,7 +14,10 @@ class Titles(private val context: Context) {
         )
         val type = object : TypeToken<Set<Title>>() {}
 
-        return request.executeWithResultCount(type)
+        val result = request.executeWithResultCount(type)
+        result.second.forEach { it.context = context }
+
+        return result
     }
 
     fun movies(): Pair<Int, Set<Movie>> {
