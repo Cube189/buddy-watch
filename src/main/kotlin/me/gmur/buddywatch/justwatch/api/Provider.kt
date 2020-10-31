@@ -10,12 +10,9 @@ data class Provider(
 
     internal lateinit var context: Context
 
-    init {
-        if (!::context.isInitialized) context = Context()
-        context[PROVIDER] = shorthand
-    }
-
     fun titles(): Titles {
+        context[PROVIDER] = shorthand
+
         return Titles(context)
     }
 }
