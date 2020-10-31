@@ -6,10 +6,25 @@ import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
 
 class Titles(private val context: Context) {
 
+    private val path = "titles/${context[REGION]}/popular"
+
     fun all(): Pair<Int, Set<Title>> {
-        val request = Http().path("titles/${context[REGION]}/popular")
-            .body(mapOf("providers" to arrayOf(context[PROVIDER])))
+        val request = Http().path(path).body(
+            mapOf("providers" to arrayOf(context[PROVIDER]))
+        )
         val type = object : TypeToken<Set<Title>>() {}
+
+        return request.executeWithResultCount(type)
+    }
+
+    fun movies(): Pair<Int, Set<Movie>> {
+        val request = Http().path(path).body(
+            mapOf(
+                "providers" to arrayOf(context[PROVIDER]),
+                "content_types" to arrayOf("movie")
+            )
+        )
+        val type = object : TypeToken<Set<Movie>>() {}
 
         return request.executeWithResultCount(type)
     }

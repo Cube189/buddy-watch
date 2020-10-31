@@ -24,15 +24,32 @@ class ApiIntegrationTest : ShouldSpec({
         providers shouldContain expectedProvider
     }
 
-    should("return all movies for a given provider") {
-        val context = Context()
-        context[REGION] = "en_US"
-        val provider = Provider("Netflix", "nfx")
-        provider.context = context
+    should("return all titles for a given provider") {
+        val provider = Fixtures.provider()
 
-        val movies = provider.titles().all()
+        val titles = provider.titles().all()
+
+        titles.first shouldBeGreaterThan 0
+    }
+
+    should("return all movies for a given provider") {
+        val provider = Fixtures.provider()
+
+        val movies = provider.titles().movies()
 
         movies.first shouldBeGreaterThan 0
     }
 
 })
+
+private object Fixtures {
+
+    fun provider(): Provider {
+        val context = Context()
+        context[REGION] = "en_US"
+        val provider = Provider("Netflix", "nfx")
+        provider.context = context
+
+        return provider
+    }
+}
