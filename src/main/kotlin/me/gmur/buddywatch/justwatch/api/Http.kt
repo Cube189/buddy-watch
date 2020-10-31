@@ -32,6 +32,8 @@ class Http constructor(private val url: String = BASE_URL) {
 
         val response = client.newCall(request).execute()
 
+        if (!response.isSuccessful) throw RequestUnsuccessful()
+
         return response.body!!.string()
     }
 }
