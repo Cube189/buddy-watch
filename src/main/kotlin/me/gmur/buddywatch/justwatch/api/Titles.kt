@@ -28,4 +28,16 @@ class Titles(private val context: Context) {
 
         return request.executeWithResultCount(type)
     }
+
+    fun shows(): Pair<Int, Set<Show>> {
+        val request = Http().path(path).body(
+            mapOf(
+                "providers" to arrayOf(context[PROVIDER]),
+                "content_types" to arrayOf("show")
+            )
+        )
+        val type = object : TypeToken<Set<Show>>() {}
+
+        return request.executeWithResultCount(type)
+    }
 }

@@ -2,6 +2,7 @@ package me.gmur.buddywatch.justwatch.api
 
 import com.google.gson.annotations.SerializedName
 import me.gmur.buddywatch.justwatch.api.TitleType.MOVIE
+import me.gmur.buddywatch.justwatch.api.TitleType.SHOW
 
 open class Title(
     private val id: Long,
@@ -19,3 +20,5 @@ enum class TitleType {
 }
 
 class Movie(id: Long, title: String) : Title(id, title, MOVIE)
+
+class Show(id: Long, title: String) : Title(id, title, SHOW)

@@ -40,6 +40,14 @@ class ApiIntegrationTest : ShouldSpec({
         movies.first shouldBeGreaterThan 0
     }
 
+    should("return all shows for a given provider") {
+        val provider = Fixtures.provider()
+
+        val shows = provider.titles().shows()
+
+        shows.first shouldBeGreaterThan 0
+    }
+
 })
 
 private object Fixtures {
