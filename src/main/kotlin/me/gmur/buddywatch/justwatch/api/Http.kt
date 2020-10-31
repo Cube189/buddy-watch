@@ -1,6 +1,7 @@
 package me.gmur.buddywatch.justwatch.api
 
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -30,6 +31,17 @@ class Http constructor(
         val result = execute()
 
         return json.fromJson(result, type.type)
+    }
+
+    fun <T : Any> executeWithResultCount(type: TypeToken<T>): Pair<Int, T> {
+        val result = execute()
+
+        val parsed = json.fromJson(result, JsonObject::class.java)
+        val total = parsed.get("total_results").toString().toInt()
+
+        val mapped = json.fromJson<T>(parsed.get("items"), type.type)
+
+        return Pair(total, mapped)
     }
 
     fun execute(): String {

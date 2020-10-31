@@ -2,6 +2,8 @@ package me.gmur.buddywatch.justwatch.api
 
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.comparables.shouldBeGreaterThan
+import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
 
 class ApiIntegrationTest : ShouldSpec({
 
@@ -20,6 +22,17 @@ class ApiIntegrationTest : ShouldSpec({
         val providers = region.providers().available()
 
         providers shouldContain expectedProvider
+    }
+
+    should("return all movies for a given provider") {
+        val context = Context()
+        context[REGION] = "en_US"
+        val provider = Provider("Netflix", "nfx")
+        provider.context = context
+
+        val movies = provider.titles().all()
+
+        movies.first shouldBeGreaterThan 0
     }
 
 })
