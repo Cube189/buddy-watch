@@ -5,10 +5,10 @@ import me.gmur.buddywatch.justwatch.api.TitleType.MOVIE
 import me.gmur.buddywatch.justwatch.api.TitleType.SHOW
 
 open class Title(
-    private val id: Long,
-    private val title: String,
-    @SerializedName("object_type") private val type: TitleType
-)
+    val id: Long,
+    val title: String,
+    @SerializedName("object_type") val type: TitleType
+) {
 
 enum class TitleType {
 
