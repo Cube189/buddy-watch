@@ -107,7 +107,21 @@ tasks.test {
 }
 
 dockerCompose {
-    if (!runsOnCi) isRequiredBy(tasks["integration"])
+    dependencies {
+        startedServices = listOf("postgres")
+    }
+
+    if (!runsOnCi) {
+        isRequiredBy(tasks["flywayMigrate"])
+        isRequiredBy(tasks["integration"])
+        isRequiredBy(tasks["test"])
+    }
+}
+
+flyway {
+    url = Database.url
+    user = Database.username
+    schemas = arrayOf(Database.schema)
 }
 
 springBoot {
