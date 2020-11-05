@@ -1,0 +1,4 @@
+CREATE TABLE token (
+    id BIGSERIAL PRIMARY KEY,
+    token TEXT NOT NULL
+);
