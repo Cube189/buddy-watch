@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jooq.codegen.GenerationTool
 import java.lang.System.getenv
 
 group = "me.gmur"
@@ -62,6 +63,13 @@ plugins {
     id("org.springframework.boot") version Version.spring.boot
 }
 
+kotlin.sourceSets["main"].kotlin.srcDirs("src/main")
+project.the<SourceSetContainer>()["main"].java.srcDirs(Path.generatedClasses)
+kotlin.sourceSets["test"].kotlin.srcDirs("src/test")
+
+sourceSets["main"].resources.srcDirs("src/main/resources")
+sourceSets["test"].resources.srcDirs("src/test/resources")
+
 val runsOnCi = !getenv("CI").isNullOrBlank()
 
 tasks.withType<Test> {
@@ -79,6 +87,10 @@ tasks.build {
     dependsOn(tasks["ktlintCheck"])
 }
 
+tasks.clean {
+    delete("$rootDir/${Path.generatedClasses}")
+}
+
 tasks.register<Test>("integration") {
     group = "verification"
 
@@ -87,11 +99,51 @@ tasks.register<Test>("integration") {
         include(Path.integrationTests)
     }
 
-    dependsOn(tasks["bootJar"])
-
     doFirst {
         if (!runsOnCi) environment["DB_PORT"] = dockerCompose.servicesInfos["postgres"]!!.tcpPorts[5432]
     }
+}
+
+tasks.register<DefaultTask>("jooqGenerate") {
+    group = "jooq"
+
+    dependsOn(tasks["flywayMigrate"])
+
+    doLast {
+        val config =
+            """
+            <configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.14.0.xsd">
+                <jdbc>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>${Database.url}</url>
+                    <user>${Database.username}</user>
+                </jdbc>
+                <generator>
+                    <name>org.jooq.codegen.KotlinGenerator</name>
+                    <database>
+                        <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                        <inputSchema>${Database.schema}</inputSchema>
+                    </database>
+                    <generate>
+                        <javaTimeTypes>true</javaTimeTypes>
+                    </generate>
+                    <strategy>
+                        <name>org.jooq.codegen.example.JPrefixGeneratorStrategy</name>
+                    </strategy>
+                    <target>
+                        <packageName>me.gmur.buddywatch.jooq</packageName>
+                        <directory>$rootDir/${Path.generatedClasses}</directory>
+                    </target>
+                </generator>
+            </configuration>
+            """.trimIndent()
+
+        GenerationTool.generate(config)
+    }
+}
+
+tasks.compileKotlin {
+    dependsOn(tasks["jooqGenerate"])
 }
 
 tasks.register<Test>("unit") {
@@ -113,6 +165,7 @@ dockerCompose {
 
     if (!runsOnCi) {
         isRequiredBy(tasks["flywayMigrate"])
+        isRequiredBy(tasks["jooqGenerate"])
         isRequiredBy(tasks["integration"])
         isRequiredBy(tasks["test"])
     }
