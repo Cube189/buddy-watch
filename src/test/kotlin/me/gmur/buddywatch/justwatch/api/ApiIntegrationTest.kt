@@ -4,7 +4,6 @@ import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import me.gmur.buddywatch.justwatch.api.Context.Key.PROVIDER
 import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
 
@@ -59,7 +58,6 @@ class ApiIntegrationTest : ShouldSpec({
         details.id shouldBe title.id
         details.title shouldBe title.title
     }
-
 })
 
 private object Fixtures {
