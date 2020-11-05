@@ -15,6 +15,10 @@ data class Region(
         context[REGION] = id
     }
 
+    fun genres(): Genres {
+        return Genres(context)
+    }
+
     fun providers(): Providers {
         return Providers(context)
     }
