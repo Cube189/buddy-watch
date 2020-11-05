@@ -9,6 +9,13 @@ repositories {
     mavenCentral()
 }
 
+buildscript {
+    dependencies {
+        classpath("org.jooq:jooq-codegen:${Version.jooq}")
+        classpath("org.postgresql:postgresql:${Version.postgres}")
+    }
+}
+
 dependencies {
     implementation("ch.qos.logback:logback-classic:${Version.logger.logback}")
     implementation("ch.qos.logback:logback-core:${Version.logger.logback}")
@@ -20,9 +27,13 @@ dependencies {
     implementation("org.flywaydb:flyway-core:${Version.flyway}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Version.kotlin}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Version.kotlin}")
+    implementation("org.jooq:jooq:${Version.jooq}")
     implementation("org.jooq:jooq-codegen:${Version.jooq}")
+    implementation("org.jooq:jooq-meta:${Version.jooq}")
     implementation("org.springframework.boot:spring-boot-starter-actuator:${Version.spring.boot}")
-    implementation("org.springframework.boot:spring-boot-starter-jooq:${Version.spring.boot}")
+    implementation("org.springframework.boot:spring-boot-starter-jooq:${Version.spring.boot}") {
+        exclude(group = "org.jooq")
+    }
 //    implementation("org.springframework.boot:spring-boot-starter-security:${Version.spring.boot}")
     implementation("org.springframework.boot:spring-boot-starter-web:${Version.spring.boot}")
 
@@ -46,6 +57,7 @@ plugins {
 
     id("com.avast.gradle.docker-compose") version Version.docker
     id("io.spring.dependency-management") version Version.spring.dependencyManagement
+    id("org.flywaydb.flyway") version Version.flyway
     id("org.jlleitschuh.gradle.ktlint") version Version.ktlint
     id("org.springframework.boot") version Version.spring.boot
 }

@@ -3,7 +3,7 @@ object Version {
     const val flyway = "6.5.6"
     const val gson = "2.8.6"
     const val java = "11"
-    const val jooq = "3.13.5"
+    const val jooq = "3.14.0"
     const val kotest = "4.2.4"
     const val kotlin = "1.3.72"
     const val ktlint = "9.3.0"
