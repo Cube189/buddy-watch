@@ -119,7 +119,6 @@ tasks.register<DefaultTask>("jooqGenerate") {
                     <user>${Database.username}</user>
                 </jdbc>
                 <generator>
-                    <name>org.jooq.codegen.KotlinGenerator</name>
                     <database>
                         <name>org.jooq.meta.postgres.PostgresDatabase</name>
                         <inputSchema>${Database.schema}</inputSchema>
