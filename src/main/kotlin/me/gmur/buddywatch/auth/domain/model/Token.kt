@@ -10,6 +10,8 @@ data class Token(
     val id: Long? = null
 ) {
 
+    constructor(value: String) : this(UUID.fromString(value))
+
     fun assignTo(group: Group): Token {
         return Token(value, group.id, id)
     }
