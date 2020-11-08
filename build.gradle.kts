@@ -25,6 +25,7 @@ dependencies {
     implementation("io.micrometer:micrometer-core:${Version.micrometer}")
     implementation("io.micrometer:micrometer-registry-prometheus:${Version.micrometer}")
     implementation("net.logstash.logback:logstash-logback-encoder:${Version.logger.encoder}")
+    implementation("org.apache.commons:commons-lang3:${Version.commons.lang}")
     implementation("org.flywaydb:flyway-core:${Version.flyway}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Version.kotlin}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Version.kotlin}")

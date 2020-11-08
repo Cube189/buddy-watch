@@ -12,6 +12,9 @@ object Version {
     const val okhttp = "4.9.0"
     const val postgres = "42.2.16"
 
+    object commons {
+        const val lang = "3.11"
+    }
     object logger {
         const val encoder = "6.4"
         const val logback = "1.2.3"
