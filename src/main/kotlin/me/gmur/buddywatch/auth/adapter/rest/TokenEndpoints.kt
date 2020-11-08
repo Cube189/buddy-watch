@@ -19,9 +19,9 @@ class TokenEndpoints(private val service: TokenService) {
     }
 
     @GetMapping
-    fun validate(token: Token): ResponseEntity<Token> {
+    fun validate(token: Token): ResponseEntity<Any> {
         val isValid = service.isValid(token)
 
-        return ResponseEntity(token, if (isValid) HttpStatus.OK else HttpStatus.NOT_FOUND)
+        return ResponseEntity(if (isValid) HttpStatus.OK else HttpStatus.NOT_FOUND)
     }
 }
