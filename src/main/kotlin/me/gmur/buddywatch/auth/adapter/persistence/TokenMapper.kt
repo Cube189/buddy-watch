@@ -16,16 +16,21 @@ class TokenMapper : Mapper<Token, JTokenRecord> {
         val mapped = base.apply {
             id = source.id
             token = source.toString()
+            groupId = source.group
         }
 
         if (mapped.id == null) {
             mapped.changed(TOKEN.ID, false)
         }
 
+        if (mapped.groupId == null) {
+            mapped.changed(TOKEN.GROUP_ID, false)
+        }
+
         return mapped
     }
 
     override fun mapToDomain(source: JTokenRecord): Token {
-        return Token(UUID.fromString(source.token))
+        return Token(UUID.fromString(source.token), source.groupId, source.id)
     }
 }
