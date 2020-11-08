@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -14,13 +15,15 @@ import org.springframework.web.bind.annotation.RestController
 class TokenEndpoints(private val service: TokenService) {
 
     @PostMapping
-    fun register(): ResponseEntity<Token> {
-        return ResponseEntity(service.register(), HttpStatus.CREATED)
+    fun register(): ResponseEntity<String> {
+        val token = service.register()
+
+        return ResponseEntity(token.toString(), HttpStatus.CREATED)
     }
 
     @GetMapping
-    fun validate(token: Token): ResponseEntity<Any> {
-        val isValid = service.isValid(token)
+    fun validate(@RequestBody token: String): ResponseEntity<Any> {
+        val isValid = service.isValid(Token(token))
 
         return ResponseEntity(if (isValid) HttpStatus.OK else HttpStatus.NOT_FOUND)
     }
