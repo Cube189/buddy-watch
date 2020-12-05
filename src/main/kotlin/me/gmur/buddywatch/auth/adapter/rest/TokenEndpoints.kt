@@ -2,13 +2,16 @@ package me.gmur.buddywatch.auth.adapter.rest
 
 import me.gmur.buddywatch.auth.domain.model.Token
 import me.gmur.buddywatch.auth.domain.model.TokenId
+import me.gmur.buddywatch.common.domain.app.ClientInputException
 import me.gmur.buddywatch.group.domain.port.TokenRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -25,12 +28,15 @@ class TokenEndpoints(private val repository: TokenRepository) {
         return ResponseEntity(stored.id.value, HttpStatus.CREATED)
     }
 
-    @GetMapping
-    fun validate(@RequestBody tokenId: UUID): ResponseEntity<Any> {
+    @GetMapping("/{tokenId}")
+    fun validate(@PathVariable tokenId: UUID) {
         val token = Token(TokenId.Persisted(tokenId))
 
         val isValid = repository.exists(token)
 
-        return ResponseEntity(if (isValid) HttpStatus.OK else HttpStatus.NOT_FOUND)
+        if (!isValid) throw NoSuchTokenException()
     }
 }
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
+private class NoSuchTokenException(): ClientInputException()
