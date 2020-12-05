@@ -1,7 +1,7 @@
 package me.gmur.buddywatch.group.adapter.rest
 
+import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.group.domain.port.ProvidersRepository
-import me.gmur.buddywatch.justwatch.api.Provider
 import me.gmur.buddywatch.justwatch.api.Region
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
