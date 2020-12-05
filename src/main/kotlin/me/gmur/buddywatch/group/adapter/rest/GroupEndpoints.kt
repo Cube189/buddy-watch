@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/group")
+@RequestMapping("/groups")
 class GroupEndpoints(
     private val createGroupUseCase: CreateGroupUseCase,
     private val assignMemberUseCase: AssignMemberUseCase,
