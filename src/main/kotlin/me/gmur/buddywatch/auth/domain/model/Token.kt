@@ -11,8 +11,6 @@ class Token(
     val group: GroupId? = null
 ) : Entity<TokenId>() {
 
-    constructor(value: String) : this(TokenId.Persisted(UUID.fromString(value)))
-
     fun assignTo(group: Group): Token {
         return Token(id, group.id)
     }

@@ -1,6 +1,7 @@
 package me.gmur.buddywatch.group.adapter.rest
 
 import me.gmur.buddywatch.auth.domain.model.Token
+import me.gmur.buddywatch.auth.domain.model.TokenId
 import me.gmur.buddywatch.group.domain.app.AssignMemberUseCase
 import me.gmur.buddywatch.group.domain.app.CreateGroupUseCase
 import me.gmur.buddywatch.group.domain.model.Group
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/groups")
@@ -49,13 +51,13 @@ class GroupEndpoints(
 
 data class AssignMemberRequest(
     val groupUrl: String,
-    val memberToken: String
+    val memberToken: UUID
 ) {
 
     fun toCommand(): AssignMemberCommand {
         return AssignMemberCommand(
             GroupUrl(groupUrl),
-            Token(memberToken)
+            Token(TokenId.Persisted(memberToken))
         )
     }
 }

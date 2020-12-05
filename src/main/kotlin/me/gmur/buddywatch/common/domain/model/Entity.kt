@@ -27,5 +27,5 @@ abstract class Id<T : Comparable<T>> : Comparable<Id<T>> {
 
     override fun compareTo(other: Id<T>) = value.compareTo(other.value)
 
-    override fun toString() = "New()"
+    override fun toString() = value.toString()
 }
