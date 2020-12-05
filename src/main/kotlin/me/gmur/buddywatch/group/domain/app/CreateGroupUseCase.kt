@@ -6,11 +6,13 @@ import me.gmur.buddywatch.group.domain.port.GroupRepository
 import org.springframework.stereotype.Service
 
 @Service
-class CreateGroupUseCase(private val groups: GroupRepository) {
+class CreateGroupUseCase(
+    private val groupRepository: GroupRepository,
+) {
 
     fun execute(command: CreateGroupCommand): Group {
         val group = command.toGroup()
 
-        return groups.store(group)
+        return groupRepository.store(group)
     }
 }
