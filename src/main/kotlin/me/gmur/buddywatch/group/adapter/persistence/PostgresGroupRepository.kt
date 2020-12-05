@@ -4,10 +4,10 @@ import me.gmur.buddywatch.group.domain.model.Group
 import me.gmur.buddywatch.group.domain.model.GroupUrl
 import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.group.domain.port.GroupRepository
-import me.gmur.buddywatch.jooq.tables.JGroup.GROUP
-import me.gmur.buddywatch.jooq.tables.JProvider.PROVIDER
-import me.gmur.buddywatch.jooq.tables.records.JGroupRecord
-import me.gmur.buddywatch.jooq.tables.records.JProviderRecord
+import me.gmur.buddywatch.jooq.tables.Group.Companion.GROUP
+import me.gmur.buddywatch.jooq.tables.Provider.Companion.PROVIDER
+import me.gmur.buddywatch.jooq.tables.records.GroupRecord
+import me.gmur.buddywatch.jooq.tables.records.ProviderRecord
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import me.gmur.buddywatch.group.adapter.persistence.GroupMapper as mapper
@@ -51,8 +51,8 @@ private object GroupMapper {
 
     fun mapToRecord(
         source: Group,
-        base: JGroupRecord
-    ): JGroupRecord {
+        base: GroupRecord
+    ): GroupRecord {
         val mapped = base.apply {
             name = source.name
             memberCount = source.memberCount
@@ -70,8 +70,8 @@ private object GroupMapper {
     fun mapToRecord(
         source: Group,
         groupId: Long?,
-        base: JProviderRecord
-    ): Collection<JProviderRecord> {
+        base: ProviderRecord
+    ): Collection<ProviderRecord> {
         val providers = source.providers
 
         val mapped = providers.map {
@@ -92,14 +92,14 @@ private object GroupMapper {
         return mapped
     }
 
-    fun mapToDomain(group: JGroupRecord, providers: Collection<JProviderRecord>): Group {
+    fun mapToDomain(group: GroupRecord, providers: Collection<ProviderRecord>): Group {
         val mappedProviders = providers.map { mapToDomain(it) }
-        val url = GroupUrl(group.url)
+        val url = GroupUrl(group.url!!)
 
-        return Group(group.name, group.memberCount, group.votesPerMember, mappedProviders, url, group.id)
+        return Group(group.name!!, group.memberCount!!, group.votesPerMember!!, mappedProviders, url, group.id)
     }
 
-    private fun mapToDomain(source: JProviderRecord): Provider {
-        return Provider(source.shorthand, source.name, source.id)
+    private fun mapToDomain(source: ProviderRecord): Provider {
+        return Provider(source.shorthand!!, source.name!!, source.id)
     }
 }

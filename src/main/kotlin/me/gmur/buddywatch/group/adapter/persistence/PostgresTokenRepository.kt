@@ -2,8 +2,8 @@ package me.gmur.buddywatch.group.adapter.persistence
 
 import me.gmur.buddywatch.group.domain.model.Token
 import me.gmur.buddywatch.group.domain.port.TokenRepository
-import me.gmur.buddywatch.jooq.tables.JToken.TOKEN
-import me.gmur.buddywatch.jooq.tables.records.JTokenRecord
+import me.gmur.buddywatch.jooq.tables.Token.Companion.TOKEN
+import me.gmur.buddywatch.jooq.tables.records.TokenRecord
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import java.util.UUID
@@ -29,7 +29,7 @@ class PostgresTokenRepository(private val db: DSLContext) : TokenRepository {
 
 private object TokenMapper {
 
-    fun mapToRecord(source: Token, base: JTokenRecord): JTokenRecord {
+    fun mapToRecord(source: Token, base: TokenRecord): TokenRecord {
         val mapped = base.apply {
             id = source.id
             token = source.toString()
@@ -47,7 +47,7 @@ private object TokenMapper {
         return mapped
     }
 
-    fun mapToDomain(source: JTokenRecord): Token {
+    fun mapToDomain(source: TokenRecord): Token {
         return Token(UUID.fromString(source.token), source.groupId, source.id)
     }
 }

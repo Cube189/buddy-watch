@@ -120,6 +120,7 @@ tasks.register<DefaultTask>("jooqGenerate") {
                     <user>${Database.username}</user>
                 </jdbc>
                 <generator>
+                    <name>org.jooq.codegen.KotlinGenerator</name>
                     <database>
                         <name>org.jooq.meta.postgres.PostgresDatabase</name>
                         <inputSchema>${Database.schema}</inputSchema>
@@ -127,9 +128,6 @@ tasks.register<DefaultTask>("jooqGenerate") {
                     <generate>
                         <javaTimeTypes>true</javaTimeTypes>
                     </generate>
-                    <strategy>
-                        <name>org.jooq.codegen.example.JPrefixGeneratorStrategy</name>
-                    </strategy>
                     <target>
                         <packageName>me.gmur.buddywatch.jooq</packageName>
                         <directory>$rootDir/${Path.generatedClasses}</directory>
@@ -175,6 +173,12 @@ flyway {
     url = Database.url
     user = Database.username
     schemas = arrayOf(Database.schema)
+}
+
+ktlint {
+    filter {
+        exclude { it.file.path.contains(Path.generatedClasses) }
+    }
 }
 
 springBoot {
