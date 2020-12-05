@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
 
 data class Region(
-    @SerializedName("full_locale") private val id: String,
-    @SerializedName("iso_3166_2") private val iso: String,
-    @SerializedName("country") private val country: String
+    @SerializedName("full_locale") val id: String,
+    @SerializedName("iso_3166_2") val iso: String,
+    @SerializedName("country") val country: String
 ) {
 
     private val context = Context()
