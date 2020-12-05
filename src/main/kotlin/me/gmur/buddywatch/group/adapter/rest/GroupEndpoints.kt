@@ -37,13 +37,13 @@ class GroupEndpoints(
 }
 
 data class AssignMemberRequest(
-    val groupId: String,
+    val groupUrl: String,
     val memberToken: String
 ) {
 
     fun toCommand(): AssignMemberCommand {
         return AssignMemberCommand(
-            GroupUrl(groupId),
+            GroupUrl(groupUrl),
             Token(memberToken)
         )
     }
