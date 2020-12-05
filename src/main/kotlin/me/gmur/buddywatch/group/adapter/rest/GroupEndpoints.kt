@@ -40,8 +40,12 @@ class GroupEndpoints(
     }
 
     @PatchMapping
-    fun assignMember(@RequestBody request: AssignMemberRequest) {
-        val command = request.toCommand()
+    fun assignMember(
+        @RequestHeader("X-Token") tokenId: UUID,
+        @RequestBody request: AssignMemberRequest
+    ) {
+        val token = Token(tokenId)
+        val command = request.toCommand(token)
 
         assignMemberUseCase.execute(command)
     }
