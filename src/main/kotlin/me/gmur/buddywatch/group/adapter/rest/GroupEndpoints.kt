@@ -1,15 +1,12 @@
 package me.gmur.buddywatch.group.adapter.rest
 
 import me.gmur.buddywatch.auth.domain.model.Token
-import me.gmur.buddywatch.auth.domain.model.TokenId
+import me.gmur.buddywatch.group.adapter.rest.dto.AssignMemberRequest
+import me.gmur.buddywatch.group.adapter.rest.dto.CreateGroupRequest
 import me.gmur.buddywatch.group.adapter.rest.dto.GroupResponse
 import me.gmur.buddywatch.group.domain.app.AssignMemberUseCase
 import me.gmur.buddywatch.group.domain.app.CreateGroupUseCase
-import me.gmur.buddywatch.group.domain.model.Group
 import me.gmur.buddywatch.group.domain.model.GroupUrl
-import me.gmur.buddywatch.group.domain.model.Provider
-import me.gmur.buddywatch.group.domain.model.command.AssignMemberCommand
-import me.gmur.buddywatch.group.domain.model.command.CreateGroupCommand
 import me.gmur.buddywatch.group.domain.port.GroupRepository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -51,30 +48,5 @@ class GroupEndpoints(
         val result = groupRepository.get(groupUrl)
 
         return GroupResponse(result)
-    }
-}
-
-data class AssignMemberRequest(
-    val groupUrl: String,
-    val memberToken: UUID
-) {
-
-    fun toCommand(): AssignMemberCommand {
-        return AssignMemberCommand(
-            GroupUrl(groupUrl),
-            Token(TokenId.Persisted(memberToken))
-        )
-    }
-}
-
-data class CreateGroupRequest(
-    val name: String,
-    val memberCount: Int,
-    val votesPerMember: Int,
-    val providers: Set<Provider>
-) {
-
-    fun toCommand(): CreateGroupCommand {
-        return CreateGroupCommand(name, memberCount, votesPerMember, providers)
     }
 }
