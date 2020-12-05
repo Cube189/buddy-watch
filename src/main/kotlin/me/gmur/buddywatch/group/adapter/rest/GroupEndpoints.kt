@@ -2,6 +2,7 @@ package me.gmur.buddywatch.group.adapter.rest
 
 import me.gmur.buddywatch.auth.domain.model.Token
 import me.gmur.buddywatch.auth.domain.model.TokenId
+import me.gmur.buddywatch.group.adapter.rest.dto.GroupResponse
 import me.gmur.buddywatch.group.domain.app.AssignMemberUseCase
 import me.gmur.buddywatch.group.domain.app.CreateGroupUseCase
 import me.gmur.buddywatch.group.domain.model.Group
@@ -28,24 +29,28 @@ class GroupEndpoints(
 ) {
 
     @PostMapping
-    fun create(@RequestBody request: CreateGroupRequest): Group {
+    fun create(@RequestBody request: CreateGroupRequest): GroupResponse {
         val command = request.toCommand()
 
-        return createGroupUseCase.execute(command)
+        val result = createGroupUseCase.execute(command)
+
+        return GroupResponse(result)
     }
 
     @PatchMapping
     fun assignMember(@RequestBody request: AssignMemberRequest) {
         val command = request.toCommand()
 
-        return assignMemberUseCase.execute(command)
+         assignMemberUseCase.execute(command)
     }
 
     @GetMapping("/{groupUrl}")
-    fun get(@PathVariable url: String): Group {
+    fun get(@PathVariable url: String): GroupResponse {
         val groupUrl = GroupUrl(url)
 
-        return groupRepository.get(groupUrl)
+        val result = groupRepository.get(groupUrl)
+
+        return GroupResponse(result)
     }
 }
 
