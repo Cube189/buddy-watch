@@ -17,6 +17,7 @@ restart-deps: down up-deps
 .PHONY: restart-deps
 
 up:
+	$(GRADLE) clean
 	$(GRADLE) bootJar
 	$(DOCKER_COMPOSE) up --build --remove-orphans -d
 .PHONY: up
@@ -27,7 +28,6 @@ up-deps:
 
 down:
 	$(DOCKER_COMPOSE) down --remove-orphans
-	$(GRADLE) clean
 .PHONY: down
 
 clean:
