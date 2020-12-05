@@ -1,5 +1,6 @@
-package me.gmur.buddywatch.group.domain.model
+package me.gmur.buddywatch.auth.domain.model
 
+import me.gmur.buddywatch.group.domain.model.Group
 import java.util.UUID
 import java.util.UUID.randomUUID
 

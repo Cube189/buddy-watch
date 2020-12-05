@@ -1,6 +1,6 @@
 package me.gmur.buddywatch.group.adapter.persistence
 
-import me.gmur.buddywatch.group.domain.model.Token
+import me.gmur.buddywatch.auth.domain.model.Token
 import me.gmur.buddywatch.group.domain.port.TokenRepository
 import me.gmur.buddywatch.jooq.tables.Token.Companion.TOKEN
 import me.gmur.buddywatch.jooq.tables.records.TokenRecord

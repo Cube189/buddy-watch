@@ -1,4 +1,4 @@
-package me.gmur.buddywatch.group.adapter.rest
+package me.gmur.buddywatch.auth.adapter.rest
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

@@ -1,11 +1,11 @@
 package me.gmur.buddywatch.group.adapter.rest
 
+import me.gmur.buddywatch.auth.domain.model.Token
 import me.gmur.buddywatch.group.domain.app.AssignMemberUseCase
 import me.gmur.buddywatch.group.domain.app.CreateGroupUseCase
 import me.gmur.buddywatch.group.domain.model.Group
 import me.gmur.buddywatch.group.domain.model.GroupUrl
 import me.gmur.buddywatch.group.domain.model.Provider
-import me.gmur.buddywatch.group.domain.model.Token
 import me.gmur.buddywatch.group.domain.model.command.AssignMemberCommand
 import me.gmur.buddywatch.group.domain.model.command.CreateGroupCommand
 import org.springframework.web.bind.annotation.PatchMapping

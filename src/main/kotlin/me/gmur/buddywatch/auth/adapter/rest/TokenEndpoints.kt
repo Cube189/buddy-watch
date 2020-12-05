@@ -1,6 +1,6 @@
-package me.gmur.buddywatch.group.adapter.rest
+package me.gmur.buddywatch.auth.adapter.rest
 
-import me.gmur.buddywatch.group.domain.model.Token
+import me.gmur.buddywatch.auth.domain.model.Token
 import me.gmur.buddywatch.group.domain.port.TokenRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
