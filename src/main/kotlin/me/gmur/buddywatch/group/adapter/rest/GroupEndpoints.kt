@@ -8,7 +8,10 @@ import me.gmur.buddywatch.group.domain.model.GroupUrl
 import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.group.domain.model.command.AssignMemberCommand
 import me.gmur.buddywatch.group.domain.model.command.CreateGroupCommand
+import me.gmur.buddywatch.group.domain.port.GroupRepository
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class GroupEndpoints(
     private val createGroupUseCase: CreateGroupUseCase,
     private val assignMemberUseCase: AssignMemberUseCase,
+    private val groupRepository: GroupRepository,
 ) {
 
     @PostMapping
@@ -33,6 +37,13 @@ class GroupEndpoints(
         val command = request.toCommand()
 
         return assignMemberUseCase.execute(command)
+    }
+
+    @GetMapping("/{groupUrl}")
+    fun get(@PathVariable url: String): Group {
+        val groupUrl = GroupUrl(url)
+
+        return groupRepository.get(groupUrl)
     }
 }
 
