@@ -1,6 +1,7 @@
 package me.gmur.buddywatch.group.adapter.persistence
 
 import me.gmur.buddywatch.group.domain.model.Group
+import me.gmur.buddywatch.group.domain.model.GroupId
 import me.gmur.buddywatch.group.domain.model.GroupUrl
 import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.group.domain.port.GroupRepository
@@ -36,7 +37,7 @@ class PostgresGroupRepository(private val db: DSLContext) : GroupRepository {
 
     override fun exists(group: Group): Boolean {
         return db.fetchExists(
-            db.selectFrom(GROUP).where(GROUP.ID.eq(group.id))
+            db.selectFrom(GROUP).where(GROUP.ID.eq(group.id.value))
         )
     }
 
@@ -93,10 +94,17 @@ private object GroupMapper {
     }
 
     fun mapToDomain(group: GroupRecord, providers: Collection<ProviderRecord>): Group {
-        val mappedProviders = providers.map { mapToDomain(it) }
+        val mappedProviders = providers.map { mapToDomain(it) }.toSet()
         val url = GroupUrl(group.url!!)
 
-        return Group(group.name!!, group.memberCount!!, group.votesPerMember!!, mappedProviders, url, group.id)
+        return Group(
+            group.name!!,
+            group.memberCount!!,
+            group.votesPerMember!!,
+            mappedProviders,
+            url,
+            GroupId.Persisted(group.id!!)
+        )
     }
 
     private fun mapToDomain(source: ProviderRecord): Provider {

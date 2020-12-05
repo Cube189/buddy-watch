@@ -1,4 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE token (
-    id BIGSERIAL PRIMARY KEY,
-    token TEXT NOT NULL
+    id UUID PRIMARY KEY
 );

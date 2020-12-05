@@ -1,22 +1,28 @@
 package me.gmur.buddywatch.auth.domain.model
 
+import me.gmur.buddywatch.common.domain.model.Entity
+import me.gmur.buddywatch.common.domain.model.Id
 import me.gmur.buddywatch.group.domain.model.Group
+import me.gmur.buddywatch.group.domain.model.GroupId
 import java.util.UUID
-import java.util.UUID.randomUUID
 
-data class Token(
-    val value: UUID = randomUUID(),
-    val group: Long? = null,
-    val id: Long? = null
-) {
+class Token(
+    override val id: TokenId = TokenId.New,
+    val group: GroupId? = null
+) : Entity<TokenId>() {
 
-    constructor(value: String) : this(UUID.fromString(value))
+    constructor(value: String) : this(TokenId.Persisted(UUID.fromString(value)))
 
     fun assignTo(group: Group): Token {
-        return Token(value, group.id, id)
+        return Token(id, group.id)
     }
 
     override fun toString(): String {
-        return value.toString()
+        return id.toString()
     }
+}
+
+sealed class TokenId : Id<UUID>() {
+    object New : TokenId()
+    data class Persisted(override val value: UUID) : TokenId()
 }
