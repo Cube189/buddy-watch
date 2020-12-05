@@ -29,7 +29,7 @@ class TokenEndpoints(private val repository: TokenRepository) {
 
     @GetMapping("/{tokenId}")
     fun validate(@PathVariable tokenId: UUID) {
-        val token = Token(TokenId.Persisted(tokenId))
+        val token = Token(tokenId)
 
         val isValid = repository.exists(token)
 
