@@ -20,6 +20,7 @@ buildscript {
 dependencies {
     implementation("ch.qos.logback:logback-classic:${Version.logger.logback}")
     implementation("ch.qos.logback:logback-core:${Version.logger.logback}")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Version.jackson}")
     implementation("com.google.code.gson:gson:${Version.gson}")
     implementation("com.squareup.okhttp3:okhttp:${Version.okhttp}")
     implementation("io.micrometer:micrometer-core:${Version.micrometer}")
