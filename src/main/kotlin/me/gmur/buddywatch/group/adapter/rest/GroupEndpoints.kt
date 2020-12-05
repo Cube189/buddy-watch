@@ -1,6 +1,7 @@
 package me.gmur.buddywatch.group.adapter.rest
 
 import me.gmur.buddywatch.auth.domain.model.Token
+import me.gmur.buddywatch.common.adapter.rest.Header.X_TOKEN
 import me.gmur.buddywatch.group.adapter.rest.dto.AssignMemberRequest
 import me.gmur.buddywatch.group.adapter.rest.dto.CreateGroupRequest
 import me.gmur.buddywatch.group.adapter.rest.dto.GroupResponse
@@ -28,7 +29,7 @@ class GroupEndpoints(
 
     @PostMapping
     fun create(
-        @RequestHeader("X-Token") tokenId: UUID,
+        @RequestHeader(X_TOKEN) tokenId: UUID,
         @RequestBody request: CreateGroupRequest
     ): GroupResponse {
         val token = Token(tokenId)
@@ -41,7 +42,7 @@ class GroupEndpoints(
 
     @PatchMapping
     fun assignMember(
-        @RequestHeader("X-Token") tokenId: UUID,
+        @RequestHeader(X_TOKEN) tokenId: UUID,
         @RequestBody request: AssignMemberRequest
     ) {
         val token = Token(tokenId)
