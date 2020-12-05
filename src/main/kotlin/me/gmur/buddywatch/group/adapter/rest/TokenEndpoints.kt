@@ -1,7 +1,7 @@
 package me.gmur.buddywatch.group.adapter.rest
 
 import me.gmur.buddywatch.group.domain.model.Token
-import me.gmur.buddywatch.group.domain.service.TokenService
+import me.gmur.buddywatch.group.domain.port.TokenRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,18 +12,20 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/token")
-class TokenEndpoints(private val service: TokenService) {
+class TokenEndpoints(private val repository: TokenRepository) {
 
     @PostMapping
     fun register(): ResponseEntity<String> {
-        val token = service.register()
+        val generated = Token()
 
-        return ResponseEntity(token.toString(), HttpStatus.CREATED)
+        repository.store(generated)
+
+        return ResponseEntity(generated.toString(), HttpStatus.CREATED)
     }
 
     @GetMapping
     fun validate(@RequestBody token: String): ResponseEntity<Any> {
-        val isValid = service.isValid(Token(token))
+        val isValid = repository.exists(Token(token))
 
         return ResponseEntity(if (isValid) HttpStatus.OK else HttpStatus.NOT_FOUND)
     }
