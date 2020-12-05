@@ -1,6 +1,6 @@
-package me.gmur.buddywatch.auth.domain.port
+package me.gmur.buddywatch.group.domain.port
 
-import me.gmur.buddywatch.auth.domain.model.Token
+import me.gmur.buddywatch.group.domain.model.Token
 
 interface TokenRepository {
 

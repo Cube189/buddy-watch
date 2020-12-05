@@ -1,7 +1,7 @@
-package me.gmur.buddywatch.auth.domain.service
+package me.gmur.buddywatch.group.domain.service
 
-import me.gmur.buddywatch.auth.domain.model.Token
-import me.gmur.buddywatch.auth.domain.port.TokenRepository
+import me.gmur.buddywatch.group.domain.model.Token
+import me.gmur.buddywatch.group.domain.port.TokenRepository
 import org.springframework.stereotype.Service
 
 @Service

@@ -5,7 +5,7 @@ class Group(
     val memberCount: Int,
     val votesPerMember: Int,
     val providers: Set<Provider>,
-    val url: GroupUrl? = null,
+    val url: GroupUrl = GroupUrl(),
     val id: Long? = null
 ) {
 
@@ -14,7 +14,7 @@ class Group(
         memberCount: Int,
         votesPerMember: Int,
         providers: List<Provider>,
-        url: GroupUrl? = null,
+        url: GroupUrl = GroupUrl(),
         id: Long? = null
     ) : this(name, memberCount, votesPerMember, providers.toSet(), url, id)
 }

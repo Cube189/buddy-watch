@@ -1,6 +1,6 @@
-package me.gmur.buddywatch.auth.adapter.persistence
+package me.gmur.buddywatch.group.adapter.persistence
 
-import me.gmur.buddywatch.auth.domain.model.Token
+import me.gmur.buddywatch.group.domain.model.Token
 import me.gmur.buddywatch.jooq.tables.JToken.TOKEN
 import me.gmur.buddywatch.jooq.tables.records.JTokenRecord
 import java.util.UUID

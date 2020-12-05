@@ -1,11 +1,11 @@
-package me.gmur.buddywatch.auth.adapter.persistence
+package me.gmur.buddywatch.group.adapter.persistence
 
-import me.gmur.buddywatch.auth.domain.model.Token
-import me.gmur.buddywatch.auth.domain.port.TokenRepository
+import me.gmur.buddywatch.group.domain.model.Token
+import me.gmur.buddywatch.group.domain.port.TokenRepository
 import me.gmur.buddywatch.jooq.tables.JToken.TOKEN
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
-import me.gmur.buddywatch.auth.adapter.persistence.TokenMapper as mapper
+import me.gmur.buddywatch.group.adapter.persistence.TokenMapper as mapper
 
 @Repository
 class PostgresTokenRepository(private val db: DSLContext) : TokenRepository {
