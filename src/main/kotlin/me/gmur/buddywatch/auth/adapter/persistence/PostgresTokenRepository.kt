@@ -32,12 +32,14 @@ class PostgresTokenRepository(private val db: DSLContext) : TokenRepository {
 private object TokenMapper {
 
     fun mapToRecord(source: Token, base: TokenRecord): TokenRecord {
+        val isNew = source.id == TokenId.New
+
         val mapped = base.apply {
-            id = if (source.id == TokenId.New) randomUUID() else source.id.value
+            id = if (isNew) randomUUID() else source.id.value
             groupId = source.group?.value
         }
 
-        if (mapped.id == null) {
+        if (!isNew) {
             mapped.changed(TOKEN.ID, false)
         }
 
