@@ -50,10 +50,7 @@ class PostgresGroupRepository(private val db: DSLContext) : GroupRepository {
 
 private object GroupMapper {
 
-    fun mapToRecord(
-        source: Group,
-        base: GroupRecord
-    ): GroupRecord {
+    fun mapToRecord(source: Group, base: GroupRecord): GroupRecord {
         val mapped = base.apply {
             name = source.name
             memberCount = source.memberCount
@@ -68,11 +65,7 @@ private object GroupMapper {
         return mapped
     }
 
-    fun mapToRecord(
-        source: Group,
-        groupId: Long?,
-        base: ProviderRecord
-    ): Collection<ProviderRecord> {
+    fun mapToRecord(source: Group, groupId: Long?, base: ProviderRecord): Collection<ProviderRecord> {
         val providers = source.providers
 
         val mapped = providers.map {
