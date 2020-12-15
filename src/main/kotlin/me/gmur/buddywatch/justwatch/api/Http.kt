@@ -23,8 +23,10 @@ class Http constructor(
         return Http(url + path, body)
     }
 
-    fun body(body: Map<String, Any>): Http {
-        return Http(url, body)
+    fun body(body: Map<FilterParam, Any>): Http {
+        val withPlainTextKeys = body.map { it.key.toPlain() to it.value }.toMap()
+
+        return Http(url, withPlainTextKeys)
     }
 
     fun <T : Any> execute(type: TypeToken<T>): T {
