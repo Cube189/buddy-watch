@@ -14,7 +14,7 @@ class Genres(private val context: Context) {
         else env.toLong()
     }
     private lateinit var lastFetched: Instant
-    private var cache: Map<Long, Genre> = mapOf()
+    private var cache: Map<Int, Genre> = mapOf()
         get() {
             return if (isCacheValid()) field else {
                 val results = fetch()
@@ -25,6 +25,8 @@ class Genres(private val context: Context) {
         }
 
     private fun isCacheValid(): Boolean {
+        if (!::lastFetched.isInitialized) return false
+
         val now = Instant.now()
         val difference = Duration.between(lastFetched, now).toSeconds()
 
@@ -48,7 +50,7 @@ class Genres(private val context: Context) {
         return cache.values.toSet()
     }
 
-    fun get(id: Long): Genre? {
+    fun get(id: Int): Genre? {
         return cache[id]
     }
 }
