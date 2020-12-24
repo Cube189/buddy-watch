@@ -6,16 +6,19 @@ import me.gmur.buddywatch.recommendation.adapter.rest.dto.SetFavoriteActorsReque
 import me.gmur.buddywatch.recommendation.adapter.rest.dto.SetFavoriteDecadesRequest
 import me.gmur.buddywatch.recommendation.adapter.rest.dto.SetFavoriteDirectorsRequest
 import me.gmur.buddywatch.recommendation.adapter.rest.dto.SetFavoriteGenresRequest
+import me.gmur.buddywatch.recommendation.domain.app.SetFavoriteActorsUseCase
 import me.gmur.buddywatch.recommendation.domain.app.SetFavoriteDecadesUseCase
 import me.gmur.buddywatch.recommendation.domain.app.SetFavoriteDirectorsUseCase
 import me.gmur.buddywatch.recommendation.domain.app.SetFavoriteGenresUseCase
 import me.gmur.buddywatch.recommendation.domain.model.taste.Actor
 import me.gmur.buddywatch.recommendation.domain.model.taste.Director
 import me.gmur.buddywatch.recommendation.domain.model.taste.Genre
+import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -25,6 +28,7 @@ class TasteEndpoints(
     private val setFavoriteDecadesUseCase: SetFavoriteDecadesUseCase,
     private val setFavoriteGenresUseCase: SetFavoriteGenresUseCase,
     private val setFavoriteDirectorsUseCase: SetFavoriteDirectorsUseCase,
+    private val setFavoriteActorsUseCase: SetFavoriteActorsUseCase,
 ) {
 
     @PostMapping("/decades")
@@ -61,12 +65,14 @@ class TasteEndpoints(
     }
 
     @PostMapping("/actors")
+    @ResponseStatus(NO_CONTENT)
     fun favoriteActors(
         @RequestHeader(X_TOKEN) tokenId: UUID,
         @RequestBody request: SetFavoriteActorsRequest
     ) {
         val token = Token(tokenId)
+        val command = request.toCommand(token)
 
-        TODO()
+        return setFavoriteActorsUseCase.execute(command)
     }
 }
