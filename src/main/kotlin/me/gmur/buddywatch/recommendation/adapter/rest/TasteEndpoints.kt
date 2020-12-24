@@ -7,8 +7,8 @@ import me.gmur.buddywatch.recommendation.adapter.rest.dto.SetFavoriteDecadesRequ
 import me.gmur.buddywatch.recommendation.adapter.rest.dto.SetFavoriteDirectorsRequest
 import me.gmur.buddywatch.recommendation.adapter.rest.dto.SetFavoriteGenresRequest
 import me.gmur.buddywatch.recommendation.domain.app.SetFavoriteDecadesUseCase
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.GetMapping
+import me.gmur.buddywatch.recommendation.domain.app.SetFavoriteGenresUseCase
+import me.gmur.buddywatch.recommendation.domain.model.taste.Actor
 import me.gmur.buddywatch.recommendation.domain.model.taste.Genre
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -22,6 +22,7 @@ import java.util.UUID
 @RequestMapping("/tastes")
 class TasteEndpoints(
     private val setFavoriteDecadesUseCase: SetFavoriteDecadesUseCase,
+    private val setFavoriteGenresUseCase: SetFavoriteGenresUseCase,
 ) {
 
     @PostMapping("/decades")
@@ -36,13 +37,14 @@ class TasteEndpoints(
     }
 
     @PostMapping("/genres")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun favoriteGenres(
         @RequestHeader(X_TOKEN) tokenId: UUID,
         @RequestBody request: SetFavoriteGenresRequest
+    ): Set<Actor> {
         val token = Token(tokenId)
+        val command = request.toCommand(token)
 
-        TODO()
+        return setFavoriteGenresUseCase.execute(command)
     }
 
     @PostMapping("/directors")
