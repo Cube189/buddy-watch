@@ -1,8 +1,9 @@
 CREATE TABLE directors_taste
 (
-    id       BIGSERIAL PRIMARY KEY,
-    name     TEXT,
-    token_id UUID REFERENCES token (id) UNIQUE
+    id        BIGSERIAL PRIMARY KEY,
+    name      TEXT,
+    reference BIGINT,
+    token_id  UUID REFERENCES token (id) UNIQUE
 );
 
 CREATE TABLE genres_taste
@@ -15,7 +16,8 @@ CREATE TABLE genres_taste
 
 CREATE TABLE actors_taste
 (
-    id       BIGSERIAL PRIMARY KEY,
-    name     TEXT,
-    token_id UUID REFERENCES token (id) UNIQUE
+    id        BIGSERIAL PRIMARY KEY,
+    name      TEXT,
+    reference BIGINT,
+    token_id  UUID REFERENCES token (id) UNIQUE
 );

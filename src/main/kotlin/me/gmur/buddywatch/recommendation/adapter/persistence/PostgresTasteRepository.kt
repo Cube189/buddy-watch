@@ -105,7 +105,7 @@ private object DecadesTasteMapper {
 private object DirectorsTasteMapper {
 
     fun mapToDomain(source: Result<DirectorsTasteRecord>): DirectorsTaste {
-        val tastes = source.map { Director(it.name!!) }
+        val tastes = source.map { Director(it.name!!, it.reference!!) }
 
         return DirectorsTaste(tastes.toSet())
     }
@@ -118,6 +118,7 @@ private object DirectorsTasteMapper {
         return source.directors.map {
             base.apply {
                 name = it.name
+                reference = it.reference
                 tokenId = token.id.value
             }
         }
@@ -150,7 +151,7 @@ private object GenresTasteMapper {
 private object ActorsTasteMapper {
 
     fun mapToDomain(source: Result<ActorsTasteRecord>): ActorsTaste {
-        val tastes = source.map { Actor(it.name!!) }
+        val tastes = source.map { Actor(it.name!!, it.reference!!) }
 
         return ActorsTaste(tastes.toSet())
     }
@@ -163,6 +164,7 @@ private object ActorsTasteMapper {
         return source.actors.map {
             base.apply {
                 name = it.name
+                reference = it.reference
                 tokenId = token.id.value
             }
         }
