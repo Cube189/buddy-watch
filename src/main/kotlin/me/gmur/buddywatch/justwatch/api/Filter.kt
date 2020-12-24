@@ -8,7 +8,11 @@ class Filter(private val context: Context) {
 
     private val path = "titles/${context[REGION]}/popular"
 
-    fun by(params: Map<FilterParam, Array<String>>): Pair<Int, Set<Title>> {
+    fun by(vararg params: Pair<FilterParam, Any>): Pair<Int, Set<Title>> {
+        return by(params.toMap())
+    }
+
+    fun by(params: Map<FilterParam, Any>): Pair<Int, Set<Title>> {
         val paramsWithProvider = params + mapOf(PROVIDERS to arrayOf(context[Context.Key.PROVIDER]))
 
         val request = Http().path(path).body(paramsWithProvider)
