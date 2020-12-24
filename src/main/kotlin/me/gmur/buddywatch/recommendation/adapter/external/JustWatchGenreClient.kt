@@ -14,9 +14,9 @@ import me.gmur.buddywatch.justwatch.api.JwTitle
 import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
 import me.gmur.buddywatch.recommendation.domain.model.taste.Genre
 import me.gmur.buddywatch.recommendation.domain.port.GenreClient
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class JustWatchGenreClient : GenreClient {
 
     override fun fetchFor(decadeTaste: DecadesTaste, group: Group, region: JwRegion): Set<Genre> {

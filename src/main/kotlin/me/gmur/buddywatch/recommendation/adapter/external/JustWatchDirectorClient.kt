@@ -16,9 +16,9 @@ import me.gmur.buddywatch.recommendation.domain.model.taste.Director
 import me.gmur.buddywatch.recommendation.domain.model.taste.Genre
 import me.gmur.buddywatch.recommendation.domain.model.taste.GenresTaste
 import me.gmur.buddywatch.recommendation.domain.port.DirectorClient
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class JustWatchDirectorClient : DirectorClient {
 
     override fun fetchFor(
