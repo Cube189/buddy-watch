@@ -18,7 +18,7 @@ import me.gmur.buddywatch.justwatch.api.JwProviderCombination
 class JustWatchGenreClient : GenreClient {
 
     override fun fetchFor(decadeTaste: DecadesTaste, group: Group, region: JwRegion): Set<JwGenre> {
-        val decades = decadeTaste.values.map { it.toRange() }
+        val decades = decadeTaste.decades.map { it.toRange() }
         val providers = group.providers
 
         val aggregated = mutableSetOf<JwGenre>()
