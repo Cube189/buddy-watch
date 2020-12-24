@@ -2,13 +2,13 @@ package me.gmur.buddywatch.justwatch.api
 
 import me.gmur.buddywatch.justwatch.api.Context.Key.PROVIDER
 
-class ProviderCombination(val providers: Collection<Provider>) {
+class JwProviderCombination(val providers: Collection<JwProvider>) {
 
     internal lateinit var context: Context
 
-    fun titles(): Titles {
+    fun titles(): JwTitles {
         context[PROVIDER] = providers.map { it.shorthand }.toTypedArray()
 
-        return Titles(context)
+        return JwTitles(context)
     }
 }

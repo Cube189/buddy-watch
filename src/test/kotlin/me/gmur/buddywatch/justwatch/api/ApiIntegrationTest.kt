@@ -6,20 +6,22 @@ import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import me.gmur.buddywatch.justwatch.api.Context.Key.PROVIDER
 import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
+import me.gmur.buddywatch.recommendation.domain.model.taste.Decade
+import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
 
 class ApiIntegrationTest : ShouldSpec({
 
     should("return all available regions") {
-        val expectedRegion = Region("en_US", "US", "United States")
+        val expectedRegion = JwRegion("en_US", "US", "United States")
 
-        val result = Regions.available()
+        val result = JwRegions.available()
 
         result shouldContain expectedRegion
     }
 
     should("return all providers available in the US") {
-        val expectedProvider = Provider("Netflix", "nfx")
-        val region = Region("en_US", "US", "United States")
+        val expectedProvider = JwProvider("Netflix", "nfx")
+        val region = JwRegion("en_US", "US", "United States")
 
         val providers = region.providers().available()
 
@@ -62,20 +64,20 @@ class ApiIntegrationTest : ShouldSpec({
 
 private object Fixtures {
 
-    fun title(): Title {
+    fun title(): JwTitle {
         val context = Context()
         context[REGION] = "en_US"
         context[PROVIDER] = "nfx"
-        val title = Title(75269L, "Yellowstone", TitleType.SHOW)
+        val title = JwTitle(75269L, "Yellowstone", TitleType.SHOW)
         title.context = context
 
         return title
     }
 
-    fun provider(): Provider {
+    fun provider(): JwProvider {
         val context = Context()
         context[REGION] = "en_US"
-        val provider = Provider("Netflix", "nfx")
+        val provider = JwProvider("Netflix", "nfx")
         provider.context = context
 
         return provider

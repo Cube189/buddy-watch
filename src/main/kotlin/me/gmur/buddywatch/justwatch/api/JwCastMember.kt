@@ -2,9 +2,9 @@ package me.gmur.buddywatch.justwatch.api
 
 import com.google.gson.annotations.SerializedName
 
-data class CastMember(
+data class JwCastMember(
     @SerializedName("person_id") val id: Long,
-    val role: Role,
+    val role: JwRole,
     val name: String,
     @SerializedName("character_name") val playedAs: String
 ) {
@@ -12,6 +12,6 @@ data class CastMember(
     val nameIndexed get() = name.capitalize().replace(" ", "")
 }
 
-enum class Role {
+enum class JwRole {
     ACTOR,
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
-import me.gmur.buddywatch.justwatch.api.Genre as JwGenre
+import me.gmur.buddywatch.justwatch.api.JwGenre
 
 @RestController
 @RequestMapping("/tastes")

@@ -5,7 +5,7 @@ import me.gmur.buddywatch.recommendation.domain.model.taste.command.SetFavoriteD
 import me.gmur.buddywatch.recommendation.domain.port.GenreClient
 import me.gmur.buddywatch.recommendation.domain.port.TasteRepository
 import org.springframework.stereotype.Service
-import me.gmur.buddywatch.justwatch.api.Genre as JwGenre
+import me.gmur.buddywatch.justwatch.api.JwGenre
 
 @Service
 class SetFavoriteDecadesUseCase(

@@ -6,7 +6,7 @@ import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
 import me.gmur.buddywatch.justwatch.api.TitleType.MOVIE
 import me.gmur.buddywatch.justwatch.api.TitleType.SHOW
 
-open class Title(
+open class JwTitle(
     val id: Long,
     val title: String,
     @SerializedName("object_type") val type: TitleType
@@ -14,9 +14,9 @@ open class Title(
 
     internal lateinit var context: Context
 
-    fun details(): TitleDetails {
+    fun details(): JwTitleDetails {
         val request = Http().path("titles/${type.toString().toLowerCase()}/$id/locale/${context[REGION].first()}")
-        val type = object : TypeToken<TitleDetails>() {}
+        val type = object : TypeToken<JwTitleDetails>() {}
 
         return request.execute(type)
     }
@@ -31,6 +31,6 @@ enum class TitleType {
     SHOW
 }
 
-class Movie(id: Long, title: String) : Title(id, title, MOVIE)
+class Movie(id: Long, title: String) : JwTitle(id, title, MOVIE)
 
-class Show(id: Long, title: String) : Title(id, title, SHOW)
+class Show(id: Long, title: String) : JwTitle(id, title, SHOW)

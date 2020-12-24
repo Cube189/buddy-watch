@@ -1,6 +1,6 @@
 package me.gmur.buddywatch.justwatch.api
 
-enum class FilterParam {
+enum class JwFilterParam {
     AGE_CERTIFICATIONS,
     CONTENT_TYPES,
     PRESENTATION_TYPES,

@@ -23,7 +23,7 @@ class Http constructor(
         return Http(url + path, body)
     }
 
-    fun body(body: Map<FilterParam, Any>): Http {
+    fun body(body: Map<JwFilterParam, Any>): Http {
         val withPlainTextKeys = body.map { it.key.toPlain() to it.value }.toMap()
 
         return Http(url, withPlainTextKeys)

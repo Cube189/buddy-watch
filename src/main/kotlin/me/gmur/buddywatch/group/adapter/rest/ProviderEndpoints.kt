@@ -2,7 +2,7 @@ package me.gmur.buddywatch.group.adapter.rest
 
 import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.group.domain.port.ProvidersRepository
-import me.gmur.buddywatch.justwatch.api.Region
+import me.gmur.buddywatch.justwatch.api.JwRegion
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,7 +15,7 @@ class ProviderEndpoints(private val providersRepository: ProvidersRepository) {
     @GetMapping("/{region}")
     fun forRegion(@PathVariable region: String): Set<Provider> {
         // TODO: Map the passed-in region to an actual region
-        val region = Region("en_US", "US", "United States")
+        val region = JwRegion("en_US", "US", "United States")
 
         return providersRepository.allFor(region)
     }

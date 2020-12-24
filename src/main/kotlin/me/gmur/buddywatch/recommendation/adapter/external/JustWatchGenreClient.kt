@@ -3,25 +3,25 @@ package me.gmur.buddywatch.recommendation.adapter.external
 import me.gmur.buddywatch.group.domain.model.Group
 import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.justwatch.api.Context
-import me.gmur.buddywatch.justwatch.api.FilterParam.RELEASE_YEAR_FROM
-import me.gmur.buddywatch.justwatch.api.FilterParam.RELEASE_YEAR_UNTIL
-import me.gmur.buddywatch.justwatch.api.Genre
-import me.gmur.buddywatch.justwatch.api.Region
-import me.gmur.buddywatch.justwatch.api.Title
+import me.gmur.buddywatch.justwatch.api.JwFilterParam.RELEASE_YEAR_FROM
+import me.gmur.buddywatch.justwatch.api.JwFilterParam.RELEASE_YEAR_UNTIL
+import me.gmur.buddywatch.justwatch.api.JwGenre
+import me.gmur.buddywatch.justwatch.api.JwRegion
+import me.gmur.buddywatch.justwatch.api.JwTitle
 import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
 import me.gmur.buddywatch.recommendation.domain.port.GenreClient
 import org.springframework.stereotype.Component
-import me.gmur.buddywatch.justwatch.api.Provider as JwProvider
-import me.gmur.buddywatch.justwatch.api.ProviderCombination as JwProviderCombination
+import me.gmur.buddywatch.justwatch.api.JwProvider
+import me.gmur.buddywatch.justwatch.api.JwProviderCombination
 
 @Component
 class JustWatchGenreClient : GenreClient {
 
-    override fun fetchFor(decadeTaste: DecadesTaste, group: Group, region: Region): Set<Genre> {
+    override fun fetchFor(decadeTaste: DecadesTaste, group: Group, region: JwRegion): Set<JwGenre> {
         val decades = decadeTaste.values.map { it.toRange() }
         val providers = group.providers
 
-        val aggregated = mutableSetOf<Genre>()
+        val aggregated = mutableSetOf<JwGenre>()
         for (decade in decades) {
             val titles = fetchTitles(providers, decade)
 
@@ -33,7 +33,7 @@ class JustWatchGenreClient : GenreClient {
         return aggregated
     }
 
-    private fun fetchTitles(providers: Set<Provider>, decade: IntRange): Set<Title> {
+    private fun fetchTitles(providers: Set<Provider>, decade: IntRange): Set<JwTitle> {
         val titles = toJwProviderCombination(providers).titles()
 
         return titles.filter().by(
@@ -42,7 +42,7 @@ class JustWatchGenreClient : GenreClient {
         ).second
     }
 
-    private fun extractGenres(titles: Set<Title>, region: Region): List<Genre> {
+    private fun extractGenres(titles: Set<JwTitle>, region: JwRegion): List<JwGenre> {
         val genreIds = titles.map { it.details() }
             .map { it.genreIds }
             .flatten()
