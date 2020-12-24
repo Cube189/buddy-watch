@@ -42,7 +42,7 @@ class JustWatchActorClient : ActorClient {
         val titles = toJwProviderCombination(providers).titles()
 
         return titles.filter().by(
-            CONTENT_TYPES to arrayOf("movies"),
+            CONTENT_TYPES to arrayOf("movie"),
             RELEASE_YEAR_FROM to decade.first,
             RELEASE_YEAR_UNTIL to decade.last,
             GENRES to genres.map { it.shorthand }
