@@ -13,4 +13,9 @@ sealed class DecadesTasteId : Id<Long>() {
     data class Persisted(override val value: Long) : DecadesTasteId()
 }
 
-data class Decade(val value: String)
+data class Decade(val value: Int) {
+
+    fun toRange(): IntRange {
+        return IntRange(value, value + 9)
+    }
+}

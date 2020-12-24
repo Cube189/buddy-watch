@@ -1,19 +1,28 @@
 package me.gmur.buddywatch.recommendation.domain.app
 
-import me.gmur.buddywatch.group.domain.port.TokenRepository
+import me.gmur.buddywatch.group.domain.port.GroupRepository
 import me.gmur.buddywatch.recommendation.domain.model.taste.command.SetFavoriteDecadesCommand
+import me.gmur.buddywatch.recommendation.domain.port.GenreClient
 import me.gmur.buddywatch.recommendation.domain.port.TasteRepository
 import org.springframework.stereotype.Service
+import me.gmur.buddywatch.justwatch.api.Genre as JwGenre
 
 @Service
-class SetFavoriteDecadesUseCase(private val tasteRepository: TasteRepository) {
+class SetFavoriteDecadesUseCase(
+    private val tasteRepository: TasteRepository,
+    private val groupRepository: GroupRepository,
+    private val genreClient: GenreClient,
+) {
 
-    fun execute(command: SetFavoriteDecadesCommand) {
+    fun execute(command: SetFavoriteDecadesCommand): Set<JwGenre> {
         val token = command.token
-        val tastes = command.toDecadesTaste()
+        val region = command.region
+        val decades = command.toDecadesTaste()
 
-        tasteRepository.store(tastes, token)
+        tasteRepository.store(decades, token)
 
-        // TODO: Fetch movies from the decades
+        val group = groupRepository.ofMember(token)
+
+        return genreClient.fetchFor(decades, group, region)
     }
 }

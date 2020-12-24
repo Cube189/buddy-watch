@@ -1,5 +1,6 @@
 package me.gmur.buddywatch.group.adapter.persistence
 
+import me.gmur.buddywatch.auth.domain.model.Token
 import me.gmur.buddywatch.group.domain.model.Group
 import me.gmur.buddywatch.group.domain.model.GroupId
 import me.gmur.buddywatch.group.domain.model.GroupUrl
@@ -9,6 +10,7 @@ import me.gmur.buddywatch.jooq.tables.Group.Companion.GROUP
 import me.gmur.buddywatch.jooq.tables.Provider.Companion.PROVIDER
 import me.gmur.buddywatch.jooq.tables.records.GroupRecord
 import me.gmur.buddywatch.jooq.tables.records.ProviderRecord
+import me.gmur.buddywatch.jooq.tables.references.TOKEN
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import me.gmur.buddywatch.group.adapter.persistence.GroupMapper as mapper
@@ -30,6 +32,22 @@ class PostgresGroupRepository(private val db: DSLContext) : GroupRepository {
         val group = db.fetchOne(GROUP, GROUP.URL.eq(groupUrl.toString()))
         val providers = db.selectFrom(PROVIDER)
             .where(PROVIDER.GROUP_ID.eq(group!!.id))
+            .fetch()
+
+        return mapper.mapToDomain(group, providers)
+    }
+
+    override fun ofMember(token: Token): Group {
+        val groupId = db.select(TOKEN.GROUP_ID).from(TOKEN)
+            .where(TOKEN.ID.eq(token.id.value))
+            .fetch()
+            .first()
+            .into(Long::class.java)
+
+        val group = db.fetchOne(GROUP, GROUP.ID.eq(groupId)) ?: throw GroupNotFound(groupId, token)
+
+        val providers = db.selectFrom(PROVIDER)
+            .where(PROVIDER.GROUP_ID.eq(group.id))
             .fetch()
 
         return mapper.mapToDomain(group, providers)

@@ -1,5 +1,6 @@
-CREATE TABLE decades_taste (
-    id BIGSERIAL PRIMARY KEY,
-    decades VARCHAR(4)[],
-    token_id UUID REFERENCES token(id)
+CREATE TABLE decades_taste
+(
+    id       BIGSERIAL PRIMARY KEY,
+    decades  INT[],
+    token_id UUID REFERENCES token (id)
 );
