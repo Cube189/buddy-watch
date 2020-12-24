@@ -9,6 +9,7 @@ import me.gmur.buddywatch.recommendation.adapter.rest.dto.SetFavoriteGenresReque
 import me.gmur.buddywatch.recommendation.domain.app.SetFavoriteDecadesUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
+import me.gmur.buddywatch.recommendation.domain.model.taste.Genre
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
-import me.gmur.buddywatch.justwatch.api.JwGenre
 
 @RestController
 @RequestMapping("/tastes")
@@ -28,7 +28,7 @@ class TasteEndpoints(
     fun favoriteDecades(
         @RequestHeader(X_TOKEN) tokenId: UUID,
         @RequestBody request: SetFavoriteDecadesRequest
-    ): Set<JwGenre> {
+    ): Set<Genre> {
         val token = Token(tokenId)
         val command = request.toCommand(token)
 

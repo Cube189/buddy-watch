@@ -6,18 +6,19 @@ import me.gmur.buddywatch.justwatch.api.Context
 import me.gmur.buddywatch.justwatch.api.JwFilterParam.RELEASE_YEAR_FROM
 import me.gmur.buddywatch.justwatch.api.JwFilterParam.RELEASE_YEAR_UNTIL
 import me.gmur.buddywatch.justwatch.api.JwGenre
+import me.gmur.buddywatch.justwatch.api.JwProvider
+import me.gmur.buddywatch.justwatch.api.JwProviderCombination
 import me.gmur.buddywatch.justwatch.api.JwRegion
 import me.gmur.buddywatch.justwatch.api.JwTitle
 import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
+import me.gmur.buddywatch.recommendation.domain.model.taste.Genre
 import me.gmur.buddywatch.recommendation.domain.port.GenreClient
 import org.springframework.stereotype.Component
-import me.gmur.buddywatch.justwatch.api.JwProvider
-import me.gmur.buddywatch.justwatch.api.JwProviderCombination
 
 @Component
 class JustWatchGenreClient : GenreClient {
 
-    override fun fetchFor(decadeTaste: DecadesTaste, group: Group, region: JwRegion): Set<JwGenre> {
+    override fun fetchFor(decadeTaste: DecadesTaste, group: Group, region: JwRegion): Set<Genre> {
         val decades = decadeTaste.decades.map { it.toRange() }
         val providers = group.providers
 
@@ -30,7 +31,9 @@ class JustWatchGenreClient : GenreClient {
             aggregated.addAll(genres)
         }
 
-        return aggregated
+        val mapped = aggregated.map { Genre(it.descriptive, it.shorthand) }
+
+        return mapped.toSet()
     }
 
     private fun fetchTitles(providers: Set<Provider>, decade: IntRange): Set<JwTitle> {

@@ -139,7 +139,7 @@ private object GenresTasteMapper {
     ): List<GenresTasteRecord> {
         return source.genres.map {
             base.apply {
-                value = it.value
+                value = it.name
                 shorthand = it.shorthand
                 tokenId = token.id.value
             }
