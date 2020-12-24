@@ -20,7 +20,7 @@ class Http constructor(
         private fun resultsPerPageEnv(): Int {
             val env = System.getenv("RESULTS_PER_PAGE")
 
-            return if (env.isNullOrBlank()) env.toInt() else 100
+            return if (env.isNullOrBlank()) 100 else env.toInt()
         }
     }
 
