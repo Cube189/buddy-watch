@@ -7,5 +7,9 @@ import me.gmur.buddywatch.recommendation.domain.model.taste.GenresTaste
 
 interface ActorClient {
 
-    fun fetchFor(decadeTaste: DecadesTaste, genresTaste: GenresTaste, group: Group): Set<Actor>
+    fun fetchFor(
+        decadesTaste: DecadesTaste,
+        genresTaste: GenresTaste,
+        group: Group
+    ): Set<Actor>
 }

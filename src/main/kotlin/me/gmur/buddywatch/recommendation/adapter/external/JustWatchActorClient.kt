@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component
 @Component
 class JustWatchActorClient : ActorClient {
 
-    override fun fetchFor(decadeTaste: DecadesTaste, genresTaste: GenresTaste, group: Group): Set<Actor> {
-        val decades = decadeTaste.decades.map { it.toRange() }
+    override fun fetchFor(decadesTaste: DecadesTaste, genresTaste: GenresTaste, group: Group): Set<Actor> {
+        val decades = decadesTaste.decades.map { it.toRange() }
         val genres = genresTaste.genres
         val providers = group.providers
 
