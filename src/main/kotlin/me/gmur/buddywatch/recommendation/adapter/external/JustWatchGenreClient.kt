@@ -3,6 +3,7 @@ package me.gmur.buddywatch.recommendation.adapter.external
 import me.gmur.buddywatch.group.domain.model.Group
 import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.justwatch.api.Context
+import me.gmur.buddywatch.justwatch.api.JwFilterParam.CONTENT_TYPES
 import me.gmur.buddywatch.justwatch.api.JwFilterParam.RELEASE_YEAR_FROM
 import me.gmur.buddywatch.justwatch.api.JwFilterParam.RELEASE_YEAR_UNTIL
 import me.gmur.buddywatch.justwatch.api.JwGenre
@@ -40,6 +41,7 @@ class JustWatchGenreClient : GenreClient {
         val titles = toJwProviderCombination(providers).titles()
 
         return titles.filter().by(
+            CONTENT_TYPES to arrayOf("movies"),
             RELEASE_YEAR_FROM to decade.first,
             RELEASE_YEAR_UNTIL to decade.last
         ).second
