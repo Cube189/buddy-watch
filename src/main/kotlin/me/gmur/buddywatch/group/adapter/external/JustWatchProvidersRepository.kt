@@ -2,10 +2,10 @@ package me.gmur.buddywatch.group.adapter.external
 
 import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.group.domain.port.ProvidersRepository
+import me.gmur.buddywatch.justwatch.api.JwProvider
 import me.gmur.buddywatch.justwatch.api.JwRegion
 import org.springframework.stereotype.Repository
 import me.gmur.buddywatch.group.adapter.external.ProviderMapper as mapper
-import me.gmur.buddywatch.justwatch.api.JwProvider
 
 @Repository
 class JustWatchProvidersRepository : ProvidersRepository {
