@@ -35,26 +35,11 @@ class TasteEndpoints(
         return setFavoriteDecadesUseCase.execute(command)
     }
 
-    @GetMapping("/genres")
-    fun genres(@RequestHeader(X_TOKEN) tokenId: UUID) {
-        val token = Token(tokenId)
-
-        TODO()
-    }
-
     @PostMapping("/genres")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun favoriteGenres(
         @RequestHeader(X_TOKEN) tokenId: UUID,
         @RequestBody request: SetFavoriteGenresRequest
-    ) {
-        val token = Token(tokenId)
-
-        TODO()
-    }
-
-    @GetMapping("/directors")
-    fun directors(@RequestHeader(X_TOKEN) tokenId: UUID) {
         val token = Token(tokenId)
 
         TODO()
@@ -66,13 +51,6 @@ class TasteEndpoints(
         @RequestHeader(X_TOKEN) tokenId: UUID,
         @RequestBody request: SetFavoriteDirectorsRequest
     ) {
-        val token = Token(tokenId)
-
-        TODO()
-    }
-
-    @GetMapping("/actors")
-    fun actors(@RequestHeader(X_TOKEN) tokenId: UUID) {
         val token = Token(tokenId)
 
         TODO()
