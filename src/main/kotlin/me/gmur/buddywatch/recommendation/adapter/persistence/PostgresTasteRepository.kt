@@ -27,25 +27,25 @@ import org.springframework.stereotype.Repository
 class PostgresTasteRepository(private val db: DSLContext) : TasteRepository {
 
     override fun store(actors: ActorsTaste, token: Token) {
-        val records = ActorsTasteMapper.mapToRecords(actors, token, db.newRecord(ACTORS_TASTE))
+        val records = ActorsTasteMapper.mapToRecords(actors, token, db)
 
         for (record in records) record.store()
     }
 
     override fun store(decades: DecadesTaste, token: Token) {
-        val record = DecadesTasteMapper.mapToRecord(decades, token, db.newRecord(DECADES_TASTE))
+        val record = DecadesTasteMapper.mapToRecord(decades, token, db)
 
         record.store()
     }
 
     override fun store(directors: DirectorsTaste, token: Token) {
-        val records = DirectorsTasteMapper.mapToRecord(directors, token, db.newRecord(DIRECTORS_TASTE))
+        val records = DirectorsTasteMapper.mapToRecord(directors, token, db)
 
         for (record in records) record.store()
     }
 
     override fun store(genres: GenresTaste, token: Token) {
-        val records = GenresTasteMapper.mapToRecords(genres, token, db.newRecord(GENRES_TASTE))
+        val records = GenresTasteMapper.mapToRecords(genres, token, db)
 
         for (record in records) record.store()
     }
@@ -93,9 +93,9 @@ private object DecadesTasteMapper {
     fun mapToRecord(
         source: DecadesTaste,
         token: Token,
-        base: DecadesTasteRecord
+        db: DSLContext
     ): DecadesTasteRecord {
-        return base.apply {
+        return db.newRecord(DECADES_TASTE).apply {
             decades = source.decades.map { it.value }.toTypedArray()
             tokenId = if (token.id == TokenId.New) null else token.id.value
         }
@@ -113,10 +113,10 @@ private object DirectorsTasteMapper {
     fun mapToRecord(
         source: DirectorsTaste,
         token: Token,
-        base: DirectorsTasteRecord
+        db: DSLContext
     ): List<DirectorsTasteRecord> {
         return source.directors.map {
-            base.apply {
+            db.newRecord(DIRECTORS_TASTE).apply {
                 name = it.name
                 reference = it.reference
                 tokenId = token.id.value
@@ -136,10 +136,10 @@ private object GenresTasteMapper {
     fun mapToRecords(
         source: GenresTaste,
         token: Token,
-        base: GenresTasteRecord
+        db: DSLContext
     ): List<GenresTasteRecord> {
         return source.genres.map {
-            base.apply {
+            db.newRecord(GENRES_TASTE).apply {
                 value = it.name
                 shorthand = it.shorthand
                 tokenId = token.id.value
@@ -159,10 +159,10 @@ private object ActorsTasteMapper {
     fun mapToRecords(
         source: ActorsTaste,
         token: Token,
-        base: ActorsTasteRecord
+        db: DSLContext
     ): List<ActorsTasteRecord> {
         return source.actors.map {
-            base.apply {
+            db.newRecord(ACTORS_TASTE).apply {
                 name = it.name
                 reference = it.reference
                 tokenId = token.id.value
