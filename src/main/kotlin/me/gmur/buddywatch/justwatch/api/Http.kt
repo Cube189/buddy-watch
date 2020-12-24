@@ -15,6 +15,13 @@ class Http constructor(
 
     companion object {
         const val BASE_URL = "https://apis.justwatch.com/content/"
+        private val RESULTS_PER_PAGE = resultsPerPageEnv()
+
+        private fun resultsPerPageEnv(): Int {
+            val env = System.getenv("RESULTS_PER_PAGE")
+
+            return if (env.isNullOrBlank()) env.toInt() else 100
+        }
     }
 
     private val json = Gson()
@@ -24,7 +31,8 @@ class Http constructor(
     }
 
     fun body(body: Map<JwFilterParam, Any>): Http {
-        val withPlainTextKeys = body.map { it.key.toPlain() to it.value }.toMap()
+        val withPageSize = body.toMutableMap().apply { putIfAbsent(JwFilterParam.PAGE_SIZE, RESULTS_PER_PAGE) }
+        val withPlainTextKeys = withPageSize.map { it.key.toPlain() to it.value }.toMap()
 
         return Http(url, withPlainTextKeys)
     }
