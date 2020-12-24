@@ -6,7 +6,7 @@ import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
 class Providers(private val context: Context) {
 
     fun available(): Set<Provider> {
-        val request = Http().path("providers/locale/${context[REGION]}")
+        val request = Http().path("providers/locale/${context[REGION].first()}")
         val type = object : TypeToken<Set<Provider>>() {}
 
         val results = request.execute(type)

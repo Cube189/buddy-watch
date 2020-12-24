@@ -8,12 +8,12 @@ import me.gmur.buddywatch.justwatch.api.FilterParam.PROVIDERS
 
 class Titles(private val context: Context) {
 
-    private val path = "titles/${context[REGION]}/popular"
+    private val path = "titles/${context[REGION].first()}/popular"
 
     fun all(): Pair<Int, Set<Title>> {
         val request = Http().path(path).body(
             mapOf(
-                PROVIDERS to arrayOf(context[PROVIDER])
+                PROVIDERS to context[PROVIDER]
             )
         )
         val type = object : TypeToken<Set<Title>>() {}
@@ -27,7 +27,7 @@ class Titles(private val context: Context) {
     fun movies(): Pair<Int, Set<Movie>> {
         val request = Http().path(path).body(
             mapOf(
-                PROVIDERS to arrayOf(context[PROVIDER]),
+                PROVIDERS to context[PROVIDER],
                 CONTENT_TYPES to arrayOf("movie")
             )
         )
@@ -39,7 +39,7 @@ class Titles(private val context: Context) {
     fun shows(): Pair<Int, Set<Show>> {
         val request = Http().path(path).body(
             mapOf(
-                PROVIDERS to arrayOf(context[PROVIDER]),
+                PROVIDERS to context[PROVIDER],
                 CONTENT_TYPES to arrayOf("show")
             )
         )

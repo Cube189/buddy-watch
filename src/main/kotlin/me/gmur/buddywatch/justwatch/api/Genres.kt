@@ -34,7 +34,7 @@ class Genres(private val context: Context) {
     }
 
     private fun fetch(): Set<Genre> {
-        val request = Http().path("genres/locale/${context[REGION]}")
+        val request = Http().path("genres/locale/${context[REGION].first()}")
         val type = object : TypeToken<Set<Genre>>() {}
 
         return request.execute(type)

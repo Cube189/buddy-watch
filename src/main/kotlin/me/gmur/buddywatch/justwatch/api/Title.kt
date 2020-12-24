@@ -15,7 +15,7 @@ open class Title(
     internal lateinit var context: Context
 
     fun details(): TitleDetails {
-        val request = Http().path("titles/${type.toString().toLowerCase()}/$id/locale/${context[REGION]}")
+        val request = Http().path("titles/${type.toString().toLowerCase()}/$id/locale/${context[REGION].first()}")
         val type = object : TypeToken<TitleDetails>() {}
 
         return request.execute(type)

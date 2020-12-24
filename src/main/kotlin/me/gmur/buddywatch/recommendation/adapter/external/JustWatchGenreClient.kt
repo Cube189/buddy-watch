@@ -12,6 +12,7 @@ import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
 import me.gmur.buddywatch.recommendation.domain.port.GenreClient
 import org.springframework.stereotype.Component
 import me.gmur.buddywatch.justwatch.api.Provider as JwProvider
+import me.gmur.buddywatch.justwatch.api.ProviderCombination as JwProviderCombination
 
 @Component
 class JustWatchGenreClient : GenreClient {
@@ -22,20 +23,18 @@ class JustWatchGenreClient : GenreClient {
 
         val aggregated = mutableSetOf<Genre>()
         for (decade in decades) {
-            for (provider in providers) {
-                val titles = fetchTitlesForDecade(provider, decade)
+            val titles = fetchTitles(providers, decade)
 
-                val genres = extractGenres(titles, region)
+            val genres = extractGenres(titles, region)
 
-                aggregated.addAll(genres)
-            }
+            aggregated.addAll(genres)
         }
 
         return aggregated
     }
 
-    private fun fetchTitlesForDecade(provider: Provider, decade: IntRange): Set<Title> {
-        val titles = provider.toJwProvider().titles()
+    private fun fetchTitles(providers: Set<Provider>, decade: IntRange): Set<Title> {
+        val titles = toJwProviderCombination(providers).titles()
 
         return titles.filter().by(
             RELEASE_YEAR_FROM to decade.first,
@@ -52,12 +51,15 @@ class JustWatchGenreClient : GenreClient {
         return genreIds.mapNotNull { region.genres().get(it) }
     }
 
-    private fun Provider.toJwProvider(): JwProvider {
+    private fun toJwProviderCombination(providers: Set<Provider>): JwProviderCombination {
         val context = Context()
         context[Context.Key.REGION] = "en_US"
-        val provider = JwProvider(name, shorthand)
-        provider.context = context
 
-        return provider
+        val jwProviders = providers.map { JwProvider(it.name, it.shorthand) }
+
+        val combination = JwProviderCombination(jwProviders)
+        combination.context = context
+
+        return combination
     }
 }

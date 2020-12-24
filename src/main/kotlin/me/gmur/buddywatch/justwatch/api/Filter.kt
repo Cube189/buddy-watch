@@ -1,19 +1,20 @@
 package me.gmur.buddywatch.justwatch.api
 
 import com.google.gson.reflect.TypeToken
+import me.gmur.buddywatch.justwatch.api.Context.Key.PROVIDER
 import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
 import me.gmur.buddywatch.justwatch.api.FilterParam.PROVIDERS
 
 class Filter(private val context: Context) {
 
-    private val path = "titles/${context[REGION]}/popular"
+    private val path = "titles/${context[REGION].first()}/popular"
 
     fun by(vararg params: Pair<FilterParam, Any>): Pair<Int, Set<Title>> {
         return by(params.toMap())
     }
 
     fun by(params: Map<FilterParam, Any>): Pair<Int, Set<Title>> {
-        val paramsWithProvider = params + mapOf(PROVIDERS to arrayOf(context[Context.Key.PROVIDER]))
+        val paramsWithProvider = params + mapOf(PROVIDERS to context[PROVIDER])
 
         val request = Http().path(path).body(paramsWithProvider)
         val type = object : TypeToken<Set<Title>>() {}
