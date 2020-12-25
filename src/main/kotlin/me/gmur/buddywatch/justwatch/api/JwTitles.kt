@@ -24,26 +24,26 @@ class JwTitles(private val context: Context) {
         return result
     }
 
-    fun movies(): Pair<Int, Set<Movie>> {
+    fun movies(): Pair<Int, Set<JwMovie>> {
         val request = Http().path(path).body(
             mapOf(
                 PROVIDERS to context[PROVIDER],
                 CONTENT_TYPES to arrayOf("movie")
             )
         )
-        val type = object : TypeToken<Set<Movie>>() {}
+        val type = object : TypeToken<Set<JwMovie>>() {}
 
         return request.executeWithResultCount(type)
     }
 
-    fun shows(): Pair<Int, Set<Show>> {
+    fun shows(): Pair<Int, Set<JwShow>> {
         val request = Http().path(path).body(
             mapOf(
                 PROVIDERS to context[PROVIDER],
                 CONTENT_TYPES to arrayOf("show")
             )
         )
-        val type = object : TypeToken<Set<Show>>() {}
+        val type = object : TypeToken<Set<JwShow>>() {}
 
         return request.executeWithResultCount(type)
     }

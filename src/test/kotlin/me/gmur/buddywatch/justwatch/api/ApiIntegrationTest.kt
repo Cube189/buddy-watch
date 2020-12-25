@@ -68,7 +68,7 @@ private object Fixtures {
         val context = Context()
         context[REGION] = "en_US"
         context[PROVIDER] = "nfx"
-        val title = JwTitle(75269L, "Yellowstone", TitleType.SHOW)
+        val title = JwTitle(75269L, "Yellowstone", JwTitleType.SHOW)
         title.context = context
 
         return title

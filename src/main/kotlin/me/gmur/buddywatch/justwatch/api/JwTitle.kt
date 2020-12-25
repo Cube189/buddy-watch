@@ -3,13 +3,13 @@ package me.gmur.buddywatch.justwatch.api
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import me.gmur.buddywatch.justwatch.api.Context.Key.REGION
-import me.gmur.buddywatch.justwatch.api.TitleType.MOVIE
-import me.gmur.buddywatch.justwatch.api.TitleType.SHOW
+import me.gmur.buddywatch.justwatch.api.JwTitleType.MOVIE
+import me.gmur.buddywatch.justwatch.api.JwTitleType.SHOW
 
 open class JwTitle(
     val id: Long,
     val title: String,
-    @SerializedName("object_type") val type: TitleType
+    @SerializedName("object_type") val type: JwTitleType
 ) {
 
     internal lateinit var context: Context
@@ -22,7 +22,7 @@ open class JwTitle(
     }
 }
 
-enum class TitleType {
+enum class JwTitleType {
 
     @SerializedName("movie")
     MOVIE,
@@ -31,6 +31,6 @@ enum class TitleType {
     SHOW
 }
 
-class Movie(id: Long, title: String) : JwTitle(id, title, MOVIE)
+class JwMovie(id: Long, title: String) : JwTitle(id, title, MOVIE)
 
-class Show(id: Long, title: String) : JwTitle(id, title, SHOW)
+class JwShow(id: Long, title: String) : JwTitle(id, title, SHOW)
