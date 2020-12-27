@@ -7,10 +7,7 @@ data class JwCastMember(
     val role: JwRole,
     val name: String,
     @SerializedName("character_name") val playedAs: String
-) {
-
-    val nameIndexed get() = name.capitalize().replace(" ", "")
-}
+)
 
 enum class JwRole {
     ACTOR,
