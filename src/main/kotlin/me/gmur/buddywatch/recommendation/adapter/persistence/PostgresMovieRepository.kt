@@ -12,6 +12,7 @@ import me.gmur.buddywatch.recommendation.domain.port.MovieRepository
 import org.jooq.DSLContext
 import org.jooq.Result
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 
 @Repository
 class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
@@ -23,11 +24,17 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
             .map { pair -> pair.first to pair.second.map { it.id!! } }
             .map { MovieMapper.mapToRecord(it.first, it.second, db.newRecord(MOVIE)) }
 
+        records.forEach { it.fetchedOn = LocalDateTime.now() }
         db.batchStore(records).execute()
     }
 
     private fun store(cast: Set<CastMember>): Set<CastMemberRecord> {
-        return cast.map { CastMemberMapper.mapToRecord(it, db.newRecord(CAST_MEMBER)) }.toSet()
+        val records = cast.map { CastMemberMapper.mapToRecord(it, db.newRecord(CAST_MEMBER)) }
+
+        records.forEach { it.fetchedOn = LocalDateTime.now() }
+        records.forEach { it.store() }
+
+        return records.toSet()
     }
 }
 
