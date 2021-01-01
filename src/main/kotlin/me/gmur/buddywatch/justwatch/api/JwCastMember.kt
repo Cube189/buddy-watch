@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class JwCastMember(
     @SerializedName("person_id") val id: Long,
-    val role: JwRole,
+    val role: JwRole?, // TODO
     val name: String,
     @SerializedName("character_name") val playedAs: String
 )
