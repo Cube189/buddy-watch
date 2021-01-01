@@ -17,24 +17,24 @@ import java.time.LocalDateTime
 @Repository
 class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
 
-    override fun store(movies: List<Movie>) {
-        val castIds = movies.map { store(it.cast) }
+    override fun store(movies: List<Movie>, timestamp: LocalDateTime) {
+        val castIds = movies.map { store(it.cast, timestamp) }
         val moviesWithCastIds = movies zip castIds
         val records = moviesWithCastIds
             .map { pair -> pair.first to pair.second.map { it.id!! } }
             .map { MovieMapper.mapToRecord(it.first, it.second, db.newRecord(MOVIE)) }
 
-        records.forEach { it.fetchedOn = LocalDateTime.now() }
+        records.forEach { it.fetchedOn = timestamp }
         db.batchStore(records).execute()
     }
 
-    private fun store(cast: List<CastMember>): List<CastMemberRecord> {
+    private fun store(cast: List<CastMember>, timestamp: LocalDateTime): List<CastMemberRecord> {
         val records = cast.map { CastMemberMapper.mapToRecord(it, db.newRecord(CAST_MEMBER)) }
 
-        records.forEach { it.fetchedOn = LocalDateTime.now() }
+        records.forEach { it.fetchedOn = timestamp }
         records.forEach { it.store() }
 
-        return records.toSet()
+        return records
     }
 }
 
