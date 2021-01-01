@@ -28,7 +28,7 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
         db.batchStore(records).execute()
     }
 
-    private fun store(cast: Set<CastMember>): Set<CastMemberRecord> {
+    private fun store(cast: List<CastMember>): List<CastMemberRecord> {
         val records = cast.map { CastMemberMapper.mapToRecord(it, db.newRecord(CAST_MEMBER)) }
 
         records.forEach { it.fetchedOn = LocalDateTime.now() }
@@ -46,7 +46,7 @@ private object MovieMapper {
             title = movie.title!!,
             description = movie.description!!,
             released = movie.released!!,
-            cast = cast.map { CastMemberMapper.mapToDomain(it) }.toSet(),
+            cast = cast.map { CastMemberMapper.mapToDomain(it) },
             genreIds = movie.genreIds!!.mapNotNull { it }.toSet(),
             reference = movie.reference!!,
         )

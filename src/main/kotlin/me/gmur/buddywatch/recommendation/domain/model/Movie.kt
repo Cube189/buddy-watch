@@ -7,7 +7,7 @@ class Movie(
     val title: String,
     val description: String,
     val released: Int,
-    val cast: Set<CastMember>,
+    val cast: List<CastMember>,
     val genreIds: Set<Int>,
     val reference: Long,
     override val id: MovieId = MovieId.New

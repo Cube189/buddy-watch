@@ -49,12 +49,12 @@ class JustWatchMovieClient : MovieClient {
     }
 
     private fun JwTitleDetails.toMovie(): Movie {
-        val cast = cast.map { it.toCastMember() }.toSet()
+        val cast = cast.map { it.toCastMember() }
 
         return Movie(title, description, released, cast, genreIds, reference = id)
     }
 
     private fun JwCastMember.toCastMember(): CastMember {
-        return CastMember(name, role.name, reference = id)
+        return CastMember(name, role?.name ?: "<unknown>", reference = id)
     }
 }
