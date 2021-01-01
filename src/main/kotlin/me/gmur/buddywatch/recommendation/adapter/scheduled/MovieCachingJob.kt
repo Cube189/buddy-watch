@@ -20,6 +20,9 @@ class MovieCachingJob(private val fetchAllMoviesUseCase: FetchAllMoviesUseCase) 
     }
 
     override fun onApplicationEvent(event: ApplicationReadyEvent) {
+        val flag = System.getenv("CACHE_ON_STARTUP")
+        if (flag == null || flag.isBlank()) return
+
         execute()
     }
 }
