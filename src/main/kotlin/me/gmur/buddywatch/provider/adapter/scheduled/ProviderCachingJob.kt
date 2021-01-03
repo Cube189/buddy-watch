@@ -1,24 +1,18 @@
-package me.gmur.buddywatch.recommendation.adapter.scheduled
+package me.gmur.buddywatch.provider.adapter.scheduled
 
-import me.gmur.buddywatch.recommendation.domain.app.FetchAllMoviesUseCase
+import me.gmur.buddywatch.provider.domain.app.FetchAllProvidersUseCase
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.ApplicationListener
 import org.springframework.core.annotation.Order
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-@Order(1)
-class MovieCachingJob(private val fetchAllMoviesUseCase: FetchAllMoviesUseCase) :
+@Order(0)
+class ProviderCachingJob(private val fetchAllProvidersUseCase: FetchAllProvidersUseCase) :
     ApplicationListener<ApplicationReadyEvent> {
 
     fun execute() {
-        fetchAllMoviesUseCase.execute()
-    }
-
-    @Scheduled(cron = "0 0 6 * * FRI")
-    fun scheduled() {
-        execute()
+        fetchAllProvidersUseCase.execute()
     }
 
     override fun onApplicationEvent(event: ApplicationReadyEvent) {
