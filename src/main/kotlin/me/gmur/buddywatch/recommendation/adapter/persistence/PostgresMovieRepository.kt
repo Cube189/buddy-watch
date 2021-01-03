@@ -6,25 +6,28 @@ import me.gmur.buddywatch.jooq.tables.references.CAST_MEMBER
 import me.gmur.buddywatch.jooq.tables.references.MOVIE
 import me.gmur.buddywatch.recommendation.domain.model.CastMember
 import me.gmur.buddywatch.recommendation.domain.model.CastMemberId
+import me.gmur.buddywatch.recommendation.domain.model.FetchedMovie
 import me.gmur.buddywatch.recommendation.domain.model.Movie
 import me.gmur.buddywatch.recommendation.domain.model.MovieId
 import me.gmur.buddywatch.recommendation.domain.port.MovieRepository
 import org.jooq.DSLContext
-import org.jooq.Result
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
 @Repository
 class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
 
-    override fun store(movies: List<Movie>, timestamp: LocalDateTime) {
-        val castIds = movies.map { store(it.cast, timestamp) }
-        val moviesWithCastIds = movies zip castIds
-        val records = moviesWithCastIds
-            .map { pair -> pair.first to pair.second.map { it.id!! } }
-            .map { MovieMapper.mapToRecord(it.first, it.second, db.newRecord(MOVIE)) }
+    override fun store(fetchedMovies: List<FetchedMovie>, timestamp: LocalDateTime) {
+        val cast = fetchedMovies.map { it.cast }.map { store(it, timestamp) }
+        val actorAndDirectorIds = cast.map { splitIntoActorAndDirectorIds(it) }
 
+        val moviesWithActorIdsAndDirectorIds = fetchedMovies zip actorAndDirectorIds
+
+        val records = moviesWithActorIdsAndDirectorIds.map {
+            FetchedMovieMapper.mapToRecord(it.first, it.second.first, it.second.second, db.newRecord(MOVIE))
+        }
         records.forEach { it.fetchedOn = timestamp }
+
         db.batchStore(records).execute()
     }
 
@@ -36,29 +39,49 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
 
         return records
     }
+
+    private fun splitIntoActorAndDirectorIds(cast: List<CastMemberRecord>): Pair<List<Long>, List<Long>> {
+        val actors = cast.filter { it.role == "ACTOR" }
+        val actorIds = actors.map { it.id!! }
+
+        val directors = cast.filter { it.role == "DIRECTOR" }
+        val directorIds = directors.map { it.id!! }
+
+        return Pair(actorIds, directorIds)
+    }
 }
 
 private object MovieMapper {
 
-    fun mapToDomain(movie: MovieRecord, cast: Result<CastMemberRecord>): Movie {
+    fun mapToDomain(source: MovieRecord): Movie {
         return Movie(
-            id = MovieId.Persisted(movie.id!!),
-            title = movie.title!!,
-            description = movie.description!!,
-            released = movie.released!!,
-            cast = cast.map { CastMemberMapper.mapToDomain(it) },
-            genreIds = movie.genreIds!!.mapNotNull { it }.toSet(),
-            reference = movie.reference!!,
+            id = MovieId.Persisted(source.id!!),
+            title = source.title!!,
+            description = source.description!!,
+            released = source.released!!,
+            actorIds = source.actorIds!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
+            directorIds = source.directorIds!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
+            genreReferences = source.genreIds!!.mapNotNull { it }.toSet(),
+            reference = source.reference!!,
         )
     }
+}
 
-    fun mapToRecord(source: Movie, castIds: List<Long>, base: MovieRecord): MovieRecord {
+private object FetchedMovieMapper {
+
+    fun mapToRecord(
+        source: FetchedMovie,
+        actorIds: List<Long>,
+        directorIds: List<Long>,
+        base: MovieRecord
+    ): MovieRecord {
         return base.apply {
             this.title = source.title
             this.description = source.description
             this.released = source.released
-            this.castIds = castIds.toTypedArray()
-            this.genreIds = source.genreIds.toTypedArray()
+            this.actorIds = actorIds.toTypedArray()
+            this.directorIds = directorIds.toTypedArray()
+            this.genreIds = source.genreReferences.toTypedArray()
             this.reference = source.reference
         }
     }

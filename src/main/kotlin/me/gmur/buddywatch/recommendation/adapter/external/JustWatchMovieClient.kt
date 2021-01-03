@@ -9,7 +9,7 @@ import me.gmur.buddywatch.justwatch.api.JwProviderCombination
 import me.gmur.buddywatch.justwatch.api.JwTitle
 import me.gmur.buddywatch.justwatch.api.JwTitleDetails
 import me.gmur.buddywatch.recommendation.domain.model.CastMember
-import me.gmur.buddywatch.recommendation.domain.model.Movie
+import me.gmur.buddywatch.recommendation.domain.model.FetchedMovie
 import me.gmur.buddywatch.recommendation.domain.port.MovieClient
 import org.springframework.stereotype.Service
 
@@ -18,7 +18,7 @@ class JustWatchMovieClient : MovieClient {
 
     private val providers = setOf<Provider>()
 
-    override fun allFor(decades: Collection<Int>): List<Movie> {
+    override fun allFor(decades: Collection<Int>): List<FetchedMovie> {
         val movies = decades.map { fetchForDecade(it) }.flatten()
         val details = movies.map { it.details() }
 
@@ -48,10 +48,10 @@ class JustWatchMovieClient : MovieClient {
         return combination
     }
 
-    private fun JwTitleDetails.toMovie(): Movie {
+    private fun JwTitleDetails.toMovie(): FetchedMovie {
         val cast = cast.map { it.toCastMember() }
 
-        return Movie(title, description, released, cast, genreIds, reference = id)
+        return FetchedMovie(title, description, released, cast, genreIds, reference = id)
     }
 
     private fun JwCastMember.toCastMember(): CastMember {
