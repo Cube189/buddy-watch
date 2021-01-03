@@ -24,7 +24,7 @@ class SetFavoriteDecadesUseCase(
         tasteRepository.store(decades, token)
 
         val group = groupRepository.ofMember(token)
-        val providers = providerRepository.findAll(group.providerShortnames)
+        val providers = providerRepository.get(group.providerShortnames)
 
         return genreRepository.fetchFor(decades, providers, region)
     }

@@ -6,5 +6,5 @@ interface ProviderRepository {
 
     fun store(providers: List<Provider>)
 
-    fun findAll(shorthand: Set<String>): Set<Provider>
+    fun get(shorthand: Set<String>): Set<Provider>
 }

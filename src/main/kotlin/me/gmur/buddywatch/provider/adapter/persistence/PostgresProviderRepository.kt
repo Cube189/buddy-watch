@@ -21,7 +21,7 @@ class PostgresProviderRepository(private val db: DSLContext) : ProviderRepositor
         db.batchStore(records).execute()
     }
 
-    override fun findAll(shorthand: Set<String>): Set<Provider> {
+    override fun get(shorthand: Set<String>): Set<Provider> {
         val lastCacheTimestamp = lastCacheTimestamp()
 
         val records = db.selectFrom(PROVIDER)

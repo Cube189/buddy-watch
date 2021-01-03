@@ -25,7 +25,7 @@ class SetFavoriteDirectorsUseCase(
         tasteRepository.store(directors, token)
 
         val group = groupRepository.ofMember(token)
-        val providers = providerRepository.findAll(group.providerShortnames)
+        val providers = providerRepository.get(group.providerShortnames)
 
         return actorRepository.fetchFor(decades, genres, providers)
     }
