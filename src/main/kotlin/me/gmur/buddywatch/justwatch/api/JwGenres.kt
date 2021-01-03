@@ -28,7 +28,7 @@ class JwGenres(private val context: Context) {
         if (!::lastFetched.isInitialized) return false
 
         val now = Instant.now()
-        val difference = Duration.between(lastFetched, now).toSeconds()
+        val difference = Duration.between(lastFetched, now).seconds
 
         return difference < cacheLifetime
     }
