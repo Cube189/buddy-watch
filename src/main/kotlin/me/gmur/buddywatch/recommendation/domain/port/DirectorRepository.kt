@@ -5,7 +5,7 @@ import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
 import me.gmur.buddywatch.recommendation.domain.model.taste.Director
 import me.gmur.buddywatch.recommendation.domain.model.taste.GenresTaste
 
-interface DirectorClient {
+interface DirectorRepository {
 
     fun fetchFor(decadesTaste: DecadesTaste, genresTaste: GenresTaste, group: Group): Set<Director>
 }

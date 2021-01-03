@@ -1,7 +1,7 @@
 package me.gmur.buddywatch.recommendation.adapter.external
 
 import me.gmur.buddywatch.group.domain.model.Group
-import me.gmur.buddywatch.group.domain.model.Provider
+import me.gmur.buddywatch.provider.domain.model.Provider
 import me.gmur.buddywatch.justwatch.api.Context
 import me.gmur.buddywatch.justwatch.api.JwFilterParam.CONTENT_TYPES
 import me.gmur.buddywatch.justwatch.api.JwFilterParam.GENRES
@@ -11,26 +11,30 @@ import me.gmur.buddywatch.justwatch.api.JwProvider
 import me.gmur.buddywatch.justwatch.api.JwProviderCombination
 import me.gmur.buddywatch.justwatch.api.JwRole
 import me.gmur.buddywatch.justwatch.api.JwTitle
-import me.gmur.buddywatch.recommendation.domain.model.taste.Actor
 import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
+import me.gmur.buddywatch.recommendation.domain.model.taste.Director
 import me.gmur.buddywatch.recommendation.domain.model.taste.Genre
 import me.gmur.buddywatch.recommendation.domain.model.taste.GenresTaste
-import me.gmur.buddywatch.recommendation.domain.port.ActorClient
+import me.gmur.buddywatch.recommendation.domain.port.DirectorRepository
 import org.springframework.stereotype.Service
 
 @Service
-class JustWatchActorClient : ActorClient {
+class JustWatchDirectorRepository : DirectorRepository {
 
-    override fun fetchFor(decadesTaste: DecadesTaste, genresTaste: GenresTaste, group: Group): Set<Actor> {
+    override fun fetchFor(
+        decadesTaste: DecadesTaste,
+        genresTaste: GenresTaste,
+        group: Group
+    ): Set<Director> {
         val decades = decadesTaste.decades.map { it.toRange() }
         val genres = genresTaste.genres
-        val providers = group.providers
+        val providers = group.providerShortnames
 
-        val aggregated = mutableSetOf<Actor>()
+        val aggregated = mutableSetOf<Director>()
         for (decade in decades) {
             val titles = fetchTitles(providers, decade, genres)
 
-            val actors = extractActors(titles)
+            val actors = extractDirectors(titles)
 
             aggregated.addAll(actors)
         }
@@ -49,14 +53,14 @@ class JustWatchActorClient : ActorClient {
         ).second
     }
 
-    private fun extractActors(titles: Set<JwTitle>): List<Actor> {
+    private fun extractDirectors(titles: Set<JwTitle>): List<Director> {
         val cast = titles.map { it.details() }
             .map { it.cast }
             .flatten()
             .toSet()
 
-        return cast.filter { it.role == JwRole.ACTOR }
-            .map { Actor(it.name, it.id) }
+        return cast.filter { it.role == JwRole.DIRECTOR }
+            .map { Director(it.name, it.id) }
     }
 
     private fun toJwProviderCombination(providers: Set<Provider>): JwProviderCombination {

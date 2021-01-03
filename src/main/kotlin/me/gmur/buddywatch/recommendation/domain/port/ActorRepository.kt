@@ -5,7 +5,7 @@ import me.gmur.buddywatch.recommendation.domain.model.taste.Actor
 import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
 import me.gmur.buddywatch.recommendation.domain.model.taste.GenresTaste
 
-interface ActorClient {
+interface ActorRepository {
 
     fun fetchFor(
         decadesTaste: DecadesTaste,
