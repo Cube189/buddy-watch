@@ -1,7 +1,6 @@
-package me.gmur.buddywatch.group.domain.model
+package me.gmur.buddywatch.provider.domain.model
 
 data class Provider(
     val shorthand: String,
     val name: String,
-    val id: Long? = null
 )

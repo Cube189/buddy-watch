@@ -4,12 +4,11 @@ import me.gmur.buddywatch.auth.domain.model.Token
 import me.gmur.buddywatch.group.domain.model.Group
 import me.gmur.buddywatch.group.domain.model.GroupId
 import me.gmur.buddywatch.group.domain.model.GroupUrl
-import me.gmur.buddywatch.group.domain.model.Provider
 import me.gmur.buddywatch.group.domain.port.GroupRepository
 import me.gmur.buddywatch.jooq.tables.Group.Companion.GROUP
-import me.gmur.buddywatch.jooq.tables.Provider.Companion.PROVIDER
+import me.gmur.buddywatch.jooq.tables.records.GroupProviderRecord
 import me.gmur.buddywatch.jooq.tables.records.GroupRecord
-import me.gmur.buddywatch.jooq.tables.records.ProviderRecord
+import me.gmur.buddywatch.jooq.tables.references.GROUP_PROVIDER
 import me.gmur.buddywatch.jooq.tables.references.TOKEN
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
@@ -22,7 +21,7 @@ class PostgresGroupRepository(private val db: DSLContext) : GroupRepository {
         val groupRecord = mapper.mapToRecord(group, db.newRecord(GROUP))
         groupRecord.store()
 
-        val providerRecords = mapper.mapToRecord(group, groupRecord.id, db.newRecord(PROVIDER))
+        val providerRecords = mapper.mapToRecord(group, groupRecord.id, db.newRecord(GROUP_PROVIDER))
         providerRecords.forEach { it.store() }
 
         return mapper.mapToDomain(groupRecord, providerRecords)
@@ -30,8 +29,8 @@ class PostgresGroupRepository(private val db: DSLContext) : GroupRepository {
 
     override fun get(groupUrl: GroupUrl): Group {
         val group = db.fetchOne(GROUP, GROUP.URL.eq(groupUrl.toString()))
-        val providers = db.selectFrom(PROVIDER)
-            .where(PROVIDER.GROUP_ID.eq(group!!.id))
+        val providers = db.selectFrom(GROUP_PROVIDER)
+            .where(GROUP_PROVIDER.GROUP_ID.eq(group!!.id))
             .fetch()
 
         return mapper.mapToDomain(group, providers)
@@ -46,8 +45,8 @@ class PostgresGroupRepository(private val db: DSLContext) : GroupRepository {
 
         val group = db.fetchOne(GROUP, GROUP.ID.eq(groupId)) ?: throw GroupNotFound(groupId, token)
 
-        val providers = db.selectFrom(PROVIDER)
-            .where(PROVIDER.GROUP_ID.eq(group.id))
+        val providers = db.selectFrom(GROUP_PROVIDER)
+            .where(GROUP_PROVIDER.GROUP_ID.eq(group.id))
             .fetch()
 
         return mapper.mapToDomain(group, providers)
@@ -83,42 +82,25 @@ private object GroupMapper {
         return mapped
     }
 
-    fun mapToRecord(source: Group, groupId: Long?, base: ProviderRecord): Collection<ProviderRecord> {
-        val providers = source.providers
-
-        val mapped = providers.map {
+    fun mapToRecord(source: Group, groupId: Long?, base: GroupProviderRecord): Collection<GroupProviderRecord> {
+        return source.providerShortnames.map {
             base.also { b ->
-                b.id = it.id
-                b.name = it.name
-                b.shorthand = it.shorthand
+                b.shorthand = it
                 b.groupId = groupId
             }
         }
-
-        for (record in mapped) {
-            if (record.id == null) {
-                record.changed(PROVIDER.ID, false)
-            }
-        }
-
-        return mapped
     }
 
-    fun mapToDomain(group: GroupRecord, providers: Collection<ProviderRecord>): Group {
-        val mappedProviders = providers.map { mapToDomain(it) }.toSet()
+    fun mapToDomain(group: GroupRecord, providers: Collection<GroupProviderRecord>): Group {
         val url = GroupUrl(group.url!!)
 
         return Group(
             group.name!!,
             group.memberCount!!,
             group.votesPerMember!!,
-            mappedProviders,
+            providers.map { it.shorthand!! }.toSet(),
             url,
             GroupId.Persisted(group.id!!)
         )
-    }
-
-    private fun mapToDomain(source: ProviderRecord): Provider {
-        return Provider(source.shorthand!!, source.name!!, source.id)
     }
 }

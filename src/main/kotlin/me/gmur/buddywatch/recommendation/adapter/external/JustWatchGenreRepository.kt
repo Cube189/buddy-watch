@@ -1,7 +1,6 @@
 package me.gmur.buddywatch.recommendation.adapter.external
 
-import me.gmur.buddywatch.group.domain.model.Group
-import me.gmur.buddywatch.group.domain.model.Provider
+import me.gmur.buddywatch.provider.domain.model.Provider
 import me.gmur.buddywatch.justwatch.api.Context
 import me.gmur.buddywatch.justwatch.api.JwFilterParam.CONTENT_TYPES
 import me.gmur.buddywatch.justwatch.api.JwFilterParam.RELEASE_YEAR_FROM
@@ -19,9 +18,8 @@ import org.springframework.stereotype.Service
 @Service
 class JustWatchGenreRepository : GenreRepository {
 
-    override fun fetchFor(decadeTaste: DecadesTaste, group: Group, region: JwRegion): Set<Genre> {
+    override fun fetchFor(decadeTaste: DecadesTaste, providers: Set<Provider>, region: JwRegion): Set<Genre> {
         val decades = decadeTaste.decades.map { it.toRange() }
-        val providers = group.providers
 
         val aggregated = mutableSetOf<JwGenre>()
         for (decade in decades) {

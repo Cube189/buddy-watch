@@ -24,11 +24,10 @@ class JustWatchDirectorRepository : DirectorRepository {
     override fun fetchFor(
         decadesTaste: DecadesTaste,
         genresTaste: GenresTaste,
-        group: Group
+        providers: Set<Provider>
     ): Set<Director> {
         val decades = decadesTaste.decades.map { it.toRange() }
         val genres = genresTaste.genres
-        val providers = group.providerShortnames
 
         val aggregated = mutableSetOf<Director>()
         for (decade in decades) {

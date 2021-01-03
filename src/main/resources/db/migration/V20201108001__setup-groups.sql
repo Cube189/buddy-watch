@@ -10,10 +10,9 @@ CREATE TABLE "group"
 ALTER TABLE token
     ADD COLUMN group_id BIGINT REFERENCES "group" (id);
 
-CREATE TABLE provider
+CREATE TABLE group_provider
 (
-    id        BIGSERIAL PRIMARY KEY,
-    name      VARCHAR(30),
-    shorthand VARCHAR(10),
-    group_id  BIGINT REFERENCES "group" (id)
+    shorthand VARCHAR(5),
+    group_id  BIGINT REFERENCES "group" (id),
+    CONSTRAINT shorthand_group_pkey PRIMARY KEY (shorthand, group_id)
 );

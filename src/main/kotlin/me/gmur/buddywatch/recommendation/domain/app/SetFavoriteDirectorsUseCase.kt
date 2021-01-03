@@ -1,6 +1,7 @@
 package me.gmur.buddywatch.recommendation.domain.app
 
 import me.gmur.buddywatch.group.domain.port.GroupRepository
+import me.gmur.buddywatch.provider.domain.port.ProviderRepository
 import me.gmur.buddywatch.recommendation.domain.model.taste.Actor
 import me.gmur.buddywatch.recommendation.domain.model.taste.command.SetFavoriteDirectorsCommand
 import me.gmur.buddywatch.recommendation.domain.port.ActorRepository
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service
 class SetFavoriteDirectorsUseCase(
     private val tasteRepository: TasteRepository,
     private val groupRepository: GroupRepository,
+    private val providerRepository: ProviderRepository,
     private val actorRepository: ActorRepository,
 ) {
 
@@ -23,7 +25,8 @@ class SetFavoriteDirectorsUseCase(
         tasteRepository.store(directors, token)
 
         val group = groupRepository.ofMember(token)
+        val providers = providerRepository.findAll(group.providerShortnames)
 
-        return actorRepository.fetchFor(decades, genres, group)
+        return actorRepository.fetchFor(decades, genres, providers)
     }
 }

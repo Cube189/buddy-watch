@@ -21,10 +21,9 @@ import org.springframework.stereotype.Service
 @Service
 class JustWatchActorRepository : ActorRepository {
 
-    override fun fetchFor(decadesTaste: DecadesTaste, genresTaste: GenresTaste, group: Group): Set<Actor> {
+    override fun fetchFor(decadesTaste: DecadesTaste, genresTaste: GenresTaste, providers: Set<Provider>): Set<Actor> {
         val decades = decadesTaste.decades.map { it.toRange() }
         val genres = genresTaste.genres
-        val providers = group.providerShortnames
 
         val aggregated = mutableSetOf<Actor>()
         for (decade in decades) {

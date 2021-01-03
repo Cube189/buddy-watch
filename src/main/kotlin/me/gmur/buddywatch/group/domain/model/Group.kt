@@ -7,7 +7,7 @@ class Group(
     val name: String,
     val memberCount: Int,
     val votesPerMember: Int,
-    val providers: Set<Provider>,
+    val providerShortnames: Set<String>,
     val url: GroupUrl = GroupUrl(),
     override val id: GroupId = GroupId.New
 ) : Entity<GroupId>()
