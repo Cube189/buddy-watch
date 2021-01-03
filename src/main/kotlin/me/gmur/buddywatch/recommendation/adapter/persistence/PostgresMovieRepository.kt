@@ -3,6 +3,7 @@ package me.gmur.buddywatch.recommendation.adapter.persistence
 import me.gmur.buddywatch.jooq.tables.records.CastMemberRecord
 import me.gmur.buddywatch.jooq.tables.records.MovieRecord
 import me.gmur.buddywatch.jooq.tables.references.CAST_MEMBER
+import me.gmur.buddywatch.jooq.tables.references.LAST_CACHE_FETCH_TIMESTAMP
 import me.gmur.buddywatch.jooq.tables.references.MOVIE
 import me.gmur.buddywatch.recommendation.domain.model.CastMember
 import me.gmur.buddywatch.recommendation.domain.model.CastMemberId
@@ -48,6 +49,18 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
         val directorIds = directors.map { it.id!! }
 
         return Pair(actorIds, directorIds)
+    }
+
+    override fun all(): List<Movie> {
+        val lastCacheTimestamp = lastCacheTimestamp()
+
+        val movies = db.selectFrom(MOVIE).where(MOVIE.FETCHED_ON.eq(lastCacheTimestamp)).fetch()
+
+        return movies.map { MovieMapper.mapToDomain(it) }
+    }
+
+    private fun lastCacheTimestamp(): LocalDateTime {
+        return db.selectFrom(LAST_CACHE_FETCH_TIMESTAMP).fetchOne()!!.fetchedOn!!
     }
 }
 

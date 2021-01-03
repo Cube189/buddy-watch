@@ -7,4 +7,6 @@ import java.time.LocalDateTime
 interface MovieRepository {
 
     fun store(fetchedMovies: List<FetchedMovie>, timestamp: LocalDateTime)
+
+    fun all(): List<Movie>
 }
