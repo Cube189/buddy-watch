@@ -3,7 +3,7 @@ package me.gmur.buddywatch.recommendation.adapter.persistence
 import me.gmur.buddywatch.jooq.tables.records.CastMemberRecord
 import me.gmur.buddywatch.jooq.tables.records.MovieRecord
 import me.gmur.buddywatch.jooq.tables.references.CAST_MEMBER
-import me.gmur.buddywatch.jooq.tables.references.LAST_CACHE_FETCH_TIMESTAMP
+import me.gmur.buddywatch.jooq.tables.references.LAST_MOVIE_CACHE_FETCH_TIMESTAMP
 import me.gmur.buddywatch.jooq.tables.references.MOVIE
 import me.gmur.buddywatch.recommendation.domain.model.CastMember
 import me.gmur.buddywatch.recommendation.domain.model.CastMemberId
@@ -62,7 +62,7 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
     }
 
     private fun lastCacheTimestamp(): LocalDateTime {
-        return db.selectFrom(LAST_CACHE_FETCH_TIMESTAMP).fetchOne()!!.fetchedOn!!
+        return db.selectFrom(LAST_MOVIE_CACHE_FETCH_TIMESTAMP).fetchOne()!!.fetchedOn!!
     }
 }
 
