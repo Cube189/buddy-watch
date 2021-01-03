@@ -18,7 +18,9 @@ import java.time.LocalDateTime
 @Repository
 class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
 
-    override fun store(fetchedMovies: List<FetchedMovie>, timestamp: LocalDateTime) {
+    override fun store(fetchedMovies: List<FetchedMovie>) {
+        val timestamp = LocalDateTime.now()
+
         val cast = fetchedMovies.map { it.cast }.map { store(it, timestamp) }
         val actorAndDirectorIds = cast.map { splitIntoActorAndDirectorIds(it) }
 
@@ -96,6 +98,7 @@ private object FetchedMovieMapper {
             this.directorIds = directorIds.toTypedArray()
             this.genreIds = source.genreReferences.toTypedArray()
             this.reference = source.reference
+            this.providerShorthand = source.providerShorthand
         }
     }
 }
