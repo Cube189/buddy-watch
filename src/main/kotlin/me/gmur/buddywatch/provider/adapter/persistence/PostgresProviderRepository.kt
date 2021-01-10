@@ -2,6 +2,7 @@ package me.gmur.buddywatch.provider.adapter.persistence
 
 import me.gmur.buddywatch.jooq.tables.records.ProviderRecord
 import me.gmur.buddywatch.jooq.tables.references.LAST_MOVIE_CACHE_FETCH_TIMESTAMP
+import me.gmur.buddywatch.jooq.tables.references.LAST_PROVIDER_CACHE_FETCH_TIMESTAMP
 import me.gmur.buddywatch.jooq.tables.references.PROVIDER
 import me.gmur.buddywatch.provider.domain.model.Provider
 import me.gmur.buddywatch.provider.domain.port.ProviderRepository
@@ -29,6 +30,16 @@ class PostgresProviderRepository(private val db: DSLContext) : ProviderRepositor
                 PROVIDER.FETCHED_ON.eq(lastCacheTimestamp)
                     .and(PROVIDER.SHORTHAND.`in`(shorthand))
             )
+            .fetch()
+
+        return records.map { ProviderMapper.mapToDomain(it) }.toSet()
+    }
+
+    override fun all(): Set<Provider> {
+        val lastCacheTimestamp = lastCacheTimestamp()
+
+        val records = db.selectFrom(PROVIDER)
+            .where(PROVIDER.FETCHED_ON.eq(lastCacheTimestamp))
             .fetch()
 
         return records.map { ProviderMapper.mapToDomain(it) }.toSet()

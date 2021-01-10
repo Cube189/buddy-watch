@@ -7,4 +7,6 @@ interface ProviderRepository {
     fun store(providers: List<Provider>)
 
     fun get(shorthand: Set<String>): Set<Provider>
+
+    fun all(): Set<Provider>
 }
