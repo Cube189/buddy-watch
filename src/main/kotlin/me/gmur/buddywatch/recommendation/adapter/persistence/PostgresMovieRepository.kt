@@ -35,10 +35,14 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
     }
 
     private fun store(cast: List<CastMember>, timestamp: LocalDateTime): List<CastMemberRecord> {
-        val records = cast.map { CastMemberMapper.mapToRecord(it, db.newRecord(CAST_MEMBER)) }
+        val actorsAndDirectors = cast.filter { it.role == "ACTOR" || it.role == "DIRECTOR" }
+        val records = actorsAndDirectors.map { CastMemberMapper.mapToRecord(it, db.newRecord(CAST_MEMBER)) }
 
-        records.forEach { it.fetchedOn = timestamp }
-        records.forEach { it.store() }
+        for (record in records) {
+            record.fetchedOn = timestamp
+
+            record.store()
+        }
 
         return records
     }
