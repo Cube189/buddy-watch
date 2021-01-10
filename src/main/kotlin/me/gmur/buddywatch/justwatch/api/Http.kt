@@ -47,7 +47,7 @@ class Http constructor(
         val result = execute()
 
         val parsed = json.fromJson(result, JsonObject::class.java)
-        val total = parsed.get("total_results").toString().toInt()
+        val total = parsed["total_results"]?.toString()?.toInt() ?: 0
 
         val mapped = json.fromJson<T>(parsed.get("items"), type.type)
 
