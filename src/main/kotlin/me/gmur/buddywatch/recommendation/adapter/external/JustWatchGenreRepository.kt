@@ -47,7 +47,7 @@ class JustWatchGenreRepository : GenreRepository {
 
     private fun extractGenres(titles: Set<JwTitle>, region: JwRegion): List<JwGenre> {
         val genreIds = titles.map { it.details() }
-            .map { it.genreIds }
+            .mapNotNull { it.genreIds }
             .flatten()
             .toSet()
 
