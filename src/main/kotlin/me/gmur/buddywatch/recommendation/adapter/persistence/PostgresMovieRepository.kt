@@ -62,7 +62,11 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
     }
 
     private fun lastCacheTimestamp(): LocalDateTime {
-        return db.selectFrom(LAST_MOVIE_CACHE_FETCH_TIMESTAMP).fetchOne()!!.fetchedOn!!
+        return db.selectDistinct(LAST_MOVIE_CACHE_FETCH_TIMESTAMP.FETCHED_ON)
+            .from(LAST_MOVIE_CACHE_FETCH_TIMESTAMP)
+            .limit(1)
+            .fetchOne()!!
+            .into(LocalDateTime::class.java)
     }
 }
 

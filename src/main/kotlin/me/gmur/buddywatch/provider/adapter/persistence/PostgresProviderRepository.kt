@@ -35,7 +35,11 @@ class PostgresProviderRepository(private val db: DSLContext) : ProviderRepositor
     }
 
     private fun lastCacheTimestamp(): LocalDateTime {
-        return db.selectFrom(LAST_MOVIE_CACHE_FETCH_TIMESTAMP).fetchOne()!!.fetchedOn!!
+        return db.selectDistinct(LAST_PROVIDER_CACHE_FETCH_TIMESTAMP.FETCHED_ON)
+            .from(LAST_PROVIDER_CACHE_FETCH_TIMESTAMP)
+            .limit(1)
+            .fetchOne()!!
+            .into(LocalDateTime::class.java)
     }
 }
 

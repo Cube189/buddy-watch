@@ -8,4 +8,5 @@ CREATE TABLE provider
 CREATE VIEW last_provider_cache_fetch_timestamp AS
 SELECT fetched_on
 FROM provider
-ORDER BY fetched_on DESC LIMIT 1;
+ORDER BY fetched_on DESC
+WITH CASCADED CHECK OPTION;
