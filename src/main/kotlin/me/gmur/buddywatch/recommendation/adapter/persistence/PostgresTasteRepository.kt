@@ -18,6 +18,7 @@ import me.gmur.buddywatch.recommendation.domain.model.taste.Director
 import me.gmur.buddywatch.recommendation.domain.model.taste.DirectorsTaste
 import me.gmur.buddywatch.recommendation.domain.model.taste.Genre
 import me.gmur.buddywatch.recommendation.domain.model.taste.GenresTaste
+import me.gmur.buddywatch.recommendation.domain.model.taste.Taste
 import me.gmur.buddywatch.recommendation.domain.port.TasteRepository
 import org.jooq.DSLContext
 import org.jooq.Result
@@ -82,6 +83,16 @@ class PostgresTasteRepository(private val db: DSLContext) : TasteRepository {
 
         return GenresTasteMapper.mapToDomain(genres)
     }
+
+    override fun of(token: Token): Taste {
+        return Taste(
+            token,
+            decades = getDecades(token),
+            genres = getGenres(token),
+            actors = getActors(token),
+            directors = getDirectors(token)
+        )
+    }
 }
 
 private object DecadesTasteMapper {
@@ -128,7 +139,7 @@ private object DirectorsTasteMapper {
 private object GenresTasteMapper {
 
     fun mapToDomain(source: Result<GenresTasteRecord>): GenresTaste {
-        val tastes = source.map { Genre(it.value!!, it.shorthand!!) }
+        val tastes = source.map { Genre(it.value!!, it.shorthand!!, it.reference!!) }
 
         return GenresTaste(tastes.toSet())
     }
@@ -142,6 +153,7 @@ private object GenresTasteMapper {
             db.newRecord(GENRES_TASTE).apply {
                 value = it.name
                 shorthand = it.shorthand
+                reference = it.reference
                 tokenId = token.id.value
             }
         }

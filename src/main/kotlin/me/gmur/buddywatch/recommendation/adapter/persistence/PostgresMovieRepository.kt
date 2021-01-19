@@ -82,9 +82,9 @@ private object MovieMapper {
             title = source.title!!,
             description = source.description!!,
             released = source.released!!,
-            actorIds = source.actorIds!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
-            directorIds = source.directorIds!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
-            genreReferences = source.genreIds!!.mapNotNull { it }.toSet(),
+            actorIds = source.actorRefs!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
+            directorIds = source.directorRefs!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
+            genreReferences = source.genreRefs!!.mapNotNull { it }.toSet(),
             reference = source.reference!!,
         )
     }
@@ -102,9 +102,9 @@ private object FetchedMovieMapper {
             this.title = source.title
             this.description = source.description
             this.released = source.released
-            this.actorIds = actorIds.toTypedArray()
-            this.directorIds = directorIds.toTypedArray()
-            this.genreIds = source.genreReferences.toTypedArray()
+            this.actorRefs = actorIds.toTypedArray()
+            this.directorRefs = directorIds.toTypedArray()
+            this.genreRefs = source.genreReferences.toTypedArray()
             this.reference = source.reference
             this.providerShorthand = source.providerShorthand
         }
@@ -124,6 +124,7 @@ private object CastMemberMapper {
 
     fun mapToRecord(source: CastMember, base: CastMemberRecord): CastMemberRecord {
         return base.apply {
+            id = source.reference
             name = source.name
             role = source.role
             reference = source.reference

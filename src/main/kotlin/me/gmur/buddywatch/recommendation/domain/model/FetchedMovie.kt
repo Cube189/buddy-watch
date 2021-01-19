@@ -10,6 +10,7 @@ class FetchedMovie(
     val cast: List<CastMember>,
     val genreReferences: Set<Int>,
     val reference: Long,
+    val providerShorthand: String,
     override val id: FetchedMovieId = FetchedMovieId.New
 ) : Entity<FetchedMovieId>()
 

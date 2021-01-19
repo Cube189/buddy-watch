@@ -30,7 +30,7 @@ class JustWatchGenreRepository : GenreRepository {
             aggregated.addAll(genres)
         }
 
-        val mapped = aggregated.map { Genre(it.descriptive, it.shorthand) }
+        val mapped = aggregated.map { Genre(it.descriptive, it.shorthand, it.id) }
 
         return mapped.toSet()
     }
