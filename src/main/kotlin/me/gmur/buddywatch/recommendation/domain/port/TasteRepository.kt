@@ -5,6 +5,7 @@ import me.gmur.buddywatch.recommendation.domain.model.taste.ActorsTaste
 import me.gmur.buddywatch.recommendation.domain.model.taste.DecadesTaste
 import me.gmur.buddywatch.recommendation.domain.model.taste.DirectorsTaste
 import me.gmur.buddywatch.recommendation.domain.model.taste.GenresTaste
+import me.gmur.buddywatch.recommendation.domain.model.taste.Taste
 
 interface TasteRepository {
 
@@ -23,4 +24,6 @@ interface TasteRepository {
     fun store(genres: GenresTaste, token: Token)
 
     fun getGenres(token: Token): GenresTaste
+
+    fun of(token: Token): Taste
 }

@@ -12,8 +12,8 @@ class Movie(
     val title: String,
     val description: String,
     val released: Int,
-    val actorIds: List<CastMemberId>,
-    val directorIds: List<CastMemberId>,
+    val actorReferences: List<CastMemberId>,
+    val directorReferences: List<CastMemberId>,
     val genreReferences: Set<Int>,
     val reference: Long,
     override val id: MovieId = MovieId.New
@@ -41,15 +41,25 @@ class Movie(
     }
 
     private fun isOfGenre(taste: GenresTaste): Boolean {
-        TODO("Needs JW references in Taste")
+        val genres = taste.genres.map { it.reference }
+
+        return genreReferences.any { genres.contains(it) }
     }
 
     private fun hasNumberOfActors(taste: ActorsTaste): Int {
-        TODO("Needs DB ID of actors")
+        val actors = taste.actors.map { it.reference }
+
+        val unwrappedReferences = actorReferences.map { it.value }
+
+        return unwrappedReferences.count { actors.contains(it) }
     }
 
     private fun hasNumberOfDirectors(taste: DirectorsTaste): Int {
-        TODO("Needs DB id of directors")
+        val directors = taste.directors.map { it.reference }
+
+        val unwrappedReferences = directorReferences.map { it.value }
+
+        return unwrappedReferences.count { directors.contains(it) }
     }
 
     private fun Boolean.toInt(): Int = if (this) 1 else 0
