@@ -7,5 +7,5 @@ interface MovieRepository {
 
     fun store(fetchedMovies: List<FetchedMovie>)
 
-    fun all(): List<Movie>
+    fun all(providers: Set<String>): List<Movie>
 }

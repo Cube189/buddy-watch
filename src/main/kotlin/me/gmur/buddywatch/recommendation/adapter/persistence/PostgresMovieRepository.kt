@@ -57,9 +57,10 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
         return Pair(actorIds, directorIds)
     }
 
-    override fun all(): List<Movie> {
+    override fun all(providers: Set<String>): List<Movie> {
         val lastCacheTimestamp = lastCacheTimestamp()
 
+        // TODO: Filter out movies by provider
         val movies = db.selectFrom(MOVIE).where(MOVIE.FETCHED_ON.eq(lastCacheTimestamp)).fetch()
 
         return movies.map { MovieMapper.mapToDomain(it) }
