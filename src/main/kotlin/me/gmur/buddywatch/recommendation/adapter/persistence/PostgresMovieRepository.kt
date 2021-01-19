@@ -82,8 +82,8 @@ private object MovieMapper {
             title = source.title!!,
             description = source.description!!,
             released = source.released!!,
-            actorIds = source.actorRefs!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
-            directorIds = source.directorRefs!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
+            actorReferences = source.actorRefs!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
+            directorReferences = source.directorRefs!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
             genreReferences = source.genreRefs!!.mapNotNull { it }.toSet(),
             reference = source.reference!!,
         )
