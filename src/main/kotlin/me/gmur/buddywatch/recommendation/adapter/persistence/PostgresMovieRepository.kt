@@ -73,6 +73,15 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
             .fetchOne()!!
             .into(LocalDateTime::class.java)
     }
+
+    override fun find(id: MovieId): Movie {
+        val lastCacheTimestamp = lastCacheTimestamp()
+
+        val find = db.selectFrom(MOVIE).where(MOVIE.FETCHED_ON.eq(lastCacheTimestamp)).fetchOne()
+
+        // TODO: Handle "movie not found" case
+        return MovieMapper.mapToDomain(find!!)
+    }
 }
 
 private object MovieMapper {
