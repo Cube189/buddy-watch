@@ -39,8 +39,9 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
         val records = actorsAndDirectors.map { CastMemberMapper.mapToRecord(it, db.newRecord(CAST_MEMBER)) }
 
         for (record in records) {
-            record.fetchedOn = timestamp
+            if (exists(record)) continue
 
+            record.fetchedOn = timestamp
             record.store()
         }
 
@@ -55,6 +56,12 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
         val directorIds = directors.map { it.id!! }
 
         return Pair(actorIds, directorIds)
+    }
+
+    private fun exists(record: CastMemberRecord): Boolean {
+        return db.fetchExists(
+            db.selectFrom(CAST_MEMBER).where(CAST_MEMBER.ID.eq(record.id))
+        )
     }
 
     override fun all(providers: Set<String>): List<Movie> {
