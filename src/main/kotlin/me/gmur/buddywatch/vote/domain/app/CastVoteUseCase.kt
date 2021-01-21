@@ -14,9 +14,14 @@ class CastVoteUseCase(
     private val voteRepository: VoteRepository,
 ) {
 
-    fun execute(command: CastVoteCommand) {
+    fun execute(command: CastVoteCommand): Int {
         val group = groupRepository.ofMember(command.token)
-        
+
+        val votesCast = voteRepository.allFor(group.id).size
+        val maxVotes = group.votesPerMember
+
+        if (votesCast > maxVotes) throw NumberOfCastVotesExceeded()
+
         val vote = Vote(
             token = command.token,
             groupId = group.id,
@@ -25,5 +30,7 @@ class CastVoteUseCase(
         )
 
         voteRepository.store(vote)
+
+        return maxVotes - votesCast
     }
 }

@@ -28,13 +28,13 @@ class VoteEndpoints(
         @RequestHeader(X_TOKEN) tokenId: UUID,
         @PathVariable movieId: Long,
         @RequestBody request: VoteRequest
-    ) {
+    ): Int {
         val token = Token(tokenId)
         val movieId = MovieId.Persisted(movieId)
 
         val command = request.toCommand(token, movieId)
 
-        castVoteUseCase.execute(command)
+        return castVoteUseCase.execute(command)
     }
 
     @GetMapping
