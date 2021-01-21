@@ -1,10 +1,12 @@
 package me.gmur.buddywatch.recommendation.adapter.persistence
 
 import me.gmur.buddywatch.jooq.tables.records.CastMemberRecord
+import me.gmur.buddywatch.jooq.tables.records.MovieProviderRecord
 import me.gmur.buddywatch.jooq.tables.records.MovieRecord
 import me.gmur.buddywatch.jooq.tables.references.CAST_MEMBER
 import me.gmur.buddywatch.jooq.tables.references.LAST_MOVIE_CACHE_FETCH_TIMESTAMP
 import me.gmur.buddywatch.jooq.tables.references.MOVIE
+import me.gmur.buddywatch.jooq.tables.references.MOVIE_PROVIDER
 import me.gmur.buddywatch.recommendation.domain.model.CastMember
 import me.gmur.buddywatch.recommendation.domain.model.CastMemberId
 import me.gmur.buddywatch.recommendation.domain.model.FetchedMovie
@@ -25,13 +27,29 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
         val actorAndDirectorIds = cast.map { splitIntoActorAndDirectorIds(it) }
 
         val moviesWithActorIdsAndDirectorIds = fetchedMovies zip actorAndDirectorIds
-
         val records = moviesWithActorIdsAndDirectorIds.map {
-            FetchedMovieMapper.mapToRecord(it.first, it.second.first, it.second.second, db.newRecord(MOVIE))
+            FetchedMovieMapper.mapToRecord(
+                it.first,
+                it.second.first,
+                it.second.second,
+                db.newRecord(MOVIE),
+                db.newRecord(MOVIE_PROVIDER)
+            )
         }
-        records.forEach { it.fetchedOn = timestamp }
+        for (record in records) {
+            val movie = record.first
+            val association = record.second
 
-        db.batchStore(records).execute()
+            db.insertInto(MOVIE_PROVIDER, MOVIE_PROVIDER.PROVIDER, MOVIE_PROVIDER.MOVIE_ID)
+                .values(association.provider, association.movieId)
+                .onDuplicateKeyIgnore()
+                .execute()
+
+            if (exists(movie)) continue
+
+            movie.fetchedOn = timestamp
+            movie.store()
+        }
     }
 
     private fun store(cast: List<CastMember>, timestamp: LocalDateTime): List<CastMemberRecord> {
@@ -61,6 +79,12 @@ class PostgresMovieRepository(private val db: DSLContext) : MovieRepository {
     private fun exists(record: CastMemberRecord): Boolean {
         return db.fetchExists(
             db.selectFrom(CAST_MEMBER).where(CAST_MEMBER.ID.eq(record.id))
+        )
+    }
+
+    private fun exists(record: MovieRecord): Boolean {
+        return db.fetchExists(
+            db.selectFrom(MOVIE).where(MOVIE.ID.eq(record.id))
         )
     }
 
@@ -102,7 +126,7 @@ private object MovieMapper {
             actorReferences = source.actorRefs!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
             directorReferences = source.directorRefs!!.mapNotNull { CastMemberId.Persisted(it!!) }.toList(),
             genreReferences = source.genreRefs!!.mapNotNull { it }.toSet(),
-            reference = source.reference!!,
+            reference = source.id!!,
         )
     }
 }
@@ -113,18 +137,24 @@ private object FetchedMovieMapper {
         source: FetchedMovie,
         actorIds: List<Long>,
         directorIds: List<Long>,
-        base: MovieRecord
-    ): MovieRecord {
-        return base.apply {
-            this.title = source.title
-            this.description = source.description
-            this.released = source.released
-            this.actorRefs = actorIds.toTypedArray()
-            this.directorRefs = directorIds.toTypedArray()
-            this.genreRefs = source.genreReferences.toTypedArray()
-            this.reference = source.reference
-            this.providerShorthand = source.providerShorthand
+        movieBase: MovieRecord,
+        associationBase: MovieProviderRecord
+    ): Pair<MovieRecord, MovieProviderRecord> {
+        val movie = movieBase.apply {
+            id = source.reference
+            title = source.title
+            description = source.description
+            released = source.released
+            actorRefs = actorIds.toTypedArray()
+            directorRefs = directorIds.toTypedArray()
+            genreRefs = source.genreReferences.toTypedArray()
         }
+        val association = associationBase.apply {
+            provider = source.providerShorthand
+            movieId = source.reference
+        }
+
+        return Pair(movie, association)
     }
 }
 
@@ -135,7 +165,7 @@ private object CastMemberMapper {
             id = CastMemberId.Persisted(source.id!!),
             name = source.name!!,
             role = source.role!!,
-            reference = source.reference!!
+            reference = source.id!!
         )
     }
 
@@ -144,7 +174,7 @@ private object CastMemberMapper {
             id = source.reference
             name = source.name
             role = source.role
-            reference = source.reference
+            id = source.reference
         }
     }
 }

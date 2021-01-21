@@ -11,7 +11,7 @@ class FetchedMovie(
     val genreReferences: Set<Int>,
     val reference: Long,
     val providerShorthand: String,
-    override val id: FetchedMovieId = FetchedMovieId.New
+    @Deprecated("Identifier is always New") override val id: FetchedMovieId = FetchedMovieId.New
 ) : Entity<FetchedMovieId>()
 
 sealed class FetchedMovieId : Id<Long>() {
