@@ -10,9 +10,13 @@ class FetchAllProvidersUseCase(
     private val providerRepository: ProviderRepository,
 ) {
 
+    private val allowed = setOf("ahb", "amp", "atp", "dnp", "hbn", "itu", "nfx")
+
     fun execute() {
         val fetched = providerClient.fetchAll()
 
-        providerRepository.store(fetched.toList())
+        val filtered = fetched.filter { it.shorthand in allowed }
+
+        providerRepository.store(filtered.toList())
     }
 }
