@@ -17,7 +17,9 @@ class CastVoteUseCase(
     fun execute(command: CastVoteCommand): Int {
         val group = groupRepository.ofMember(command.token)
 
-        val votesCast = voteRepository.allFor(group.id).size
+        val votesCast = voteRepository.allFor(command.token)
+            .filter { it.liked }
+            .size
         val maxVotes = group.votesPerMember
 
         if (votesCast > maxVotes) throw NumberOfCastVotesExceeded()

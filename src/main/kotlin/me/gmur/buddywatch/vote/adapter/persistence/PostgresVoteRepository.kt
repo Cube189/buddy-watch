@@ -30,6 +30,18 @@ class PostgresVoteRepository(private val db: DSLContext) : VoteRepository {
 
         val records = db.selectFrom(VOTE)
             .where(VOTE.CACHE_FETCH_TIMESTAMP.eq(lastCacheTimestamp))
+            .and(VOTE.GROUP_ID.eq(groupId.value))
+            .fetch()
+
+        return records.map { mapper.mapToDomain(it) }
+    }
+
+    override fun allFor(token: Token): List<Vote> {
+        val lastCacheTimestamp = lastCacheTimestamp()
+
+        val records = db.selectFrom(VOTE)
+            .where(VOTE.CACHE_FETCH_TIMESTAMP.eq(lastCacheTimestamp))
+            .and(VOTE.TOKEN_ID.eq(token.id.value))
             .fetch()
 
         return records.map { mapper.mapToDomain(it) }
